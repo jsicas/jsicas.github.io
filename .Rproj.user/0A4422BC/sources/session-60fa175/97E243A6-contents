@@ -82,12 +82,12 @@ Portanto, fica provado que $\bs{M}$ é simétrica e idempotente.
 Mostre que $s^2 = \displaystyle\frac{\hat u' \hat u}{n-k-1}$ é um estimador não viesado para $\sigma^2$.
 :::
 
-::: {.callout-tip}
+::: {.callout-tip collapse=false}
 # Resultados auxiliares
 
 ::: {#thm-esp_forma_quadratica}
 
-# esperança de forma quadrática
+# Esperança de forma quadrática
 
 Seja $X$ um vetor aleatório $n\times 1$ com média $\mu$ e covariância $\Sigma$ e $A \in \mathbb{R}^{n \times n}$ uma matriz simétrica. Então, a esperança de uma forma quadrática $X'AX$ é dada por:
 $$\bbE(X'AX) = \tr(A\Sigma) + \mu'A\mu$$
