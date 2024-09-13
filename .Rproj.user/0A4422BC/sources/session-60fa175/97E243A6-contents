@@ -5,6 +5,7 @@ crossref:
   eq-prefix: 'Eq. '
 format:
   html:
+    toc: false
     embed-resources: true
     theme:
       dark: darkly
