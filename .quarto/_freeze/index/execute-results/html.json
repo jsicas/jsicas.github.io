@@ -1,8 +1,8 @@
 {
-  "hash": "e84928ed54524188e49b396313794eba",
+  "hash": "8ad3deb396db873166ca05918f1202cd",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: \"jsicas.github.io\"\n---\n\n\nLink da [Lista 3](listas_econometria/Lista3_Resolucao_ME715.qmd)\n\n[about](about.qmd#section)\n\nThis is a Quarto website.\n\nTo learn more about Quarto websites visit <https://quarto.org/docs/websites>.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "markdown": "---\ntitle: \"jsicas.github.io\"\nformat:\n  html: \n    html-math-method: mathjax\n    include-in-header: mathjax1.html\n---\n\n\n\\begin{equation}\nax = b \\label{teste}\n\\end{equation}\n\n\\eqref{teste}\n\n\\ref{teste}\n\nLink da [Lista 3](listas_econometria/Lista3_Resolucao_ME715.qmd)\n\n[about](about.qmd#section)\n\nThis is a Quarto website.\n\nTo learn more about Quarto websites visit <https://quarto.org/docs/websites>.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

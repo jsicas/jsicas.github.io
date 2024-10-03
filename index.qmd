@@ -1,15 +1,13 @@
 ---
 title: "jsicas.github.io"
+format:
+  html:
+    html-math-method: mathjax
+    include-in-header: mathjax1.html
 ---
 
 Link da [Lista 3](listas_econometria/Lista3_Resolucao_ME715.qmd)
+Link da [Lista 4](listas_econometria/Lista4_Resolucao_ME715.html)
 
 [about](about.qmd#section)
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
