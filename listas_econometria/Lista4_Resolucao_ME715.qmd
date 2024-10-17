@@ -1,0 +1,710 @@
+---
+title: 'Lista 4 - Econometria - ME715'
+lang: pt
+crossref:
+  eq-prefix: 'Eq. '
+format:
+  html:
+    # html-math-method: katex
+    embed-resources: true
+    theme:
+      dark: darkly
+      light: flatly
+---
+
+::: {.hidden}
+```{css, echo=FALSE}
+p {
+  text-align: justify
+}
+
+details {
+    border: 2px solid #272726; /* Borda ao redor do elemento */
+    border-radius: 5px; /* Arredondamento das bordas */
+    padding: 10px; /* Espaçamento interno */
+    margin-top: 10px; /* Espaçamento superior */
+}
+```
+
+$$
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\posto}{posto}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\p}{\mathbb{P}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\norm}{\mathcal{N}}
+$$
+:::
+
+::: {.callout-note icon=false}
+## Questão 1
+
+Prove que se $X \sim \norm_p(\mu, \Sigma)$, então $(X - \mu)'\Sigma^{-1} (X - \mu) \sim \chi^2_p$
+:::
+
+::: {.callout-tip collapse='false'}
+## Resultados auxiliares
+
+::: {#def-chiQuadrado}
+## Distribuição Chi-quadrado
+
+Seja $Z_i \overset{i.i.d.}{\sim} \norm(0,1)$, então dizemos que
+$$\sum_{i=1}^n Z_i^2 \sim \chi^2_n$$
+segue uma distribuição Qui-quadrado com $n$ graus de liberdade.
+:::
+
+<!-- ::: {#thm-aux1} -->
+<!-- Seja $A \in \mathbb{C}^{n\times n}$ e $D$ uma matriz $n\times n$ diagonal, então $A$ é normal ($A^HA = AA^H$) se, e somente se, $A=VDV^H$, com $V$ unitária ($V^HV = VV^H=I$). -->
+<!-- ::: -->
+
+::: {#thm-aux2}
+Seja $A$ uma matriz simétrica, então seus autovalores são todos reas.
+:::
+
+::: {#thm-teoEspectral}
+## Teorema Espectral
+
+Seja $A$ uma matriz quadrada $n \times n$ e simétrica com autovalores reais, então, temos $v^{(1)},\dots,v^{(n)}$ autovetores ortogonais. Além disso, seja $V=(v^{(1)}, \dots, v^{(n)})$ e $D=\operatorname{diag}(\lambda_1, \dots, \lambda_n)$, então
+$$A = VDV'$$
+:::
+:::
+
+Seja $X \sim \norm_p(\mu,\Sigma)$, então
+
+$$\E\left[ \Sigma^{-\frac{1}{2}}(X - \mu) \right] = \Sigma^{-\frac{1}{2}}(\E(X) - \mu)$$
+$$\V\left[ \Sigma^{-\frac{1}{2}}(X - \mu) \right] = \Sigma^{-\frac{1}{2}} \V(X) \left( \Sigma^{-\frac{1}{2}} \right)' = \Sigma^{-\frac{1}{2}}\Sigma^{\frac{1}{2}}\Sigma^{\frac{1}{2}}\Sigma^{-\frac{1}{2}} = I$$
+Note que a a notação $\Sigma^{-\frac{1}{2}}$ faz sentido, por $\Sigma$ ser uma matriz simétrica (@thm-teoEspectral). Logo, $\Sigma^{-\frac{1}{2}} (X - \mu) \sim \norm(\bar0, I)$. Então, pela @def-chiQuadrado,
+
+$$\left[ \Sigma^{-\frac{1}{2}}(X - \mu) \right]' \Sigma^{-\frac{1}{2}}(X - \mu) = (X - \mu)\Sigma^{-1}(X - \mu) \sim \chi^2_p$$
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 2
+
+Suponha que ajustou um modelo de regressão e obteve $\beta_1 = 0.56$ e um $\text{p-valor} = 0.086$ para testar $H_0∶ \beta_1 = 0 \;\; V.S. \;\; H_1: \beta_1 \neq 0$. Contudo, você está interessado em testar $H_0∶ \beta_1 = 0 \;\; V.S. \;\; H_1: \beta_1 > 0$, qual seria o p-valor? Rejeitaria $H_0$ a um nível se significância de $5\%$?
+:::
+
+
+Intuição:
+
+```{r, echo=F, fig.height=3.5}
+par(mfrow=c(1,2), mai=c(0.5,0.5,0.5,0.5))
+f <-  function(x) dnorm(x)
+plot(f, -5, 5, xaxt='n', yaxt='n', main='p-valor: Teste Bilateral')
+polygon(x=c(-5,seq(-5,-1.96,l=50),-1.96), y=c(0,f(seq(-5,-1.96,l=50)), 0), col='gray')
+polygon(x=c(1.96,seq(1.96,5,l=50),5), y=c(0,f(seq(1.96,5,l=50)), 0), col='gray')
+axis(1, at=c(-1.96, 1.96), label=c(expression(-t[obs]),
+     expression(t[obs])), cex.axis=1.5)
+
+plot(f, -5, 5, xaxt='n', yaxt='n', main='p-valor: Teste Unilateral')
+polygon(x=c(1.96,seq(1.96,5,l=50),5), y=c(0,f(seq(1.96,5,l=50)), 0), col='gray')
+axis(1, at=1.96, label=expression(t[obs]), cex.axis=1.5)
+```
+
+Note, então, que
+$$\p_{H_0} (|t| > |t_{obs}|) = 2 \p_{H_0} (t > |t_{obs}|) = 2 \p_{H_0} (t < - |t_{obs}|)$$
+Logo, o novo p-valor é de $\frac{0.086}{2} = 0.043$. Portanto, rejeito $H_0$ a favor de $H_1$, a um nível de $5\%$.
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 3
+
+Um erro comum em muito estudos aplicados é dizer que "aceitamos" $H_0$. Contudo, nós, estatísticos, preferimos dizer "não rejeitamos" $H_0$ e não "aceitamos" $H_0$. Discuta o motivo.
+:::
+
+Ao fazer um teste estatístico buscamos evidências contra $H_0$ e em favor de $H_1$, veja que isto não é equivalente, no caso de não encontrar evidência o suficiente, a falar que $H_0$ é verdadeira.
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 4
+
+O dataset *rdchem* contém informação de 32 empresas da industria química. Entre as informações coletadas, temos: *rdintens* (gastos com pesquisa e desenvolvimento como uma porcentagem das vendas), *sales* (vendas mensuradas em mlhões de dólares) e *profmarg* (lucros como uma porcentagem das vendas). Ajuste um modelo da forma:
+
+$$rdintens = \beta_0 + \beta_1 \log(sales) + \beta_2 profmarg + u$$
+assumindo que as hipóteses do modelo linear clássico acontecem.
+
+  a) Interprete os coeficientes de $\log(sales)$.
+  b) Teste a hipóteses de que a intensidade de *P&D* não varia com *sales* contra a alternativa de que *P&D* aumenta com as vendas.
+  c) Interprete o coeficiente de *profmarg*, ele é economicamente grande?
+  d) *profmarg* tem um efeito estatisticamente significativo sobre *rdintens*?
+:::
+
+::: {.callout-tip collapse='false'}
+## Resultados auxiliares
+
+| Modelo | V. Dependente | V. Independente | Interpretação $\beta_1$ |
+|:-------:|:-------:|:--------:|:--------:|
+| Nível-Nível | $y$            | $x$       | $\Delta y = \beta_1 \Delta x$ |
+| Nível-Log   | $y$            | $\log(x)$ | $\Delta y = \frac{\beta_1}{100} \Delta_\% x$ |
+| Log-Nível   | $\log(y)$      | $x$       | $\Delta_\% y = 100\beta_1 \Delta x$ |
+| Log-Log     | $\log(y)$      | $\log(x)$ | $\Delta_\% y = \beta_1 \Delta_\% x$ |
+: Interpretação dos tipos de modelo {#tbl-interpretacao}
+
+<br>
+:::
+
+```{r, include=F}
+# configurações para utilziar Python e Julia
+require(JuliaCall)
+require(reticulate)
+```
+
+a) Interprete os coeficientes de $\log(sales)$.
+
+::: {.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+# package e banco de dados
+require(wooldridge)
+data(rdchem)
+
+fit_r <- lm(rdintens ~ log(sales) + profmarg, data = rdchem)
+summary(fit_r)
+```
+
+
+## Python
+```{python}
+# packages
+import statsmodels.formula.api as smf
+import wooldridge as woo
+import numpy as np
+
+# lendo dados
+rdchem = woo.dataWoo('rdchem')
+rdchem = r['rdchem']  # leitura alternativa (direto do R)
+
+# ajustando modelo
+fit_py = smf.ols(formula='rdintens ~ np.log(sales) + profmarg', data=rdchem).fit()
+print(fit_py.summary())
+```
+
+
+## Julia
+```{julia}
+using WooldridgeDatasets, DataFrames, Statistics, GLM, Distributions
+
+# dados
+rdchem = DataFrame(wooldridge("rdchem"));
+
+fit_julia = lm(@formula(rdintens ~ log(sales) + profmarg), rdchem);
+coeficientes = DataFrame(Beta = coefnames(fit_julia), Valor = coef(fit_julia))
+```
+
+:::
+
+A cada aumento de $1\%$ na variável *sales* é esperado um aumento de $\frac{\hat\beta_1}{100} = 0.0032$ unidades em *rdintens* (ver @tbl-interpretacao).
+
+
+b) Teste a hipóteses de que a intensidade de *P&D* não varia com *sales* contra a alternativa de que *P&D* aumenta com as vendas.
+
+::: {.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+fit_r <- lm(rdintens ~ sales, data=rdchem)
+summary(fit_r)
+```
+
+
+## Python
+```{python}
+# ajustando modelo
+fit_py = smf.ols(formula='rdintens ~ sales', data=rdchem).fit()
+print(fit_py.summary())
+```
+
+
+## Julia
+```{julia }
+using HypothesisTests
+
+fit_julia = lm(@formula(rdintens ~ sales), rdchem);
+println(coeftable(fit_julia))
+```
+
+:::
+
+Não, note que o \text{p-valor}, por ser um teste unilateral e o `R` executar um teste bilateral deve ser dividido por $2$. Logo, $\text{p-valor} = \frac{0.237}{2} = 0.1185$, portanto, ao nível de significância de $5\%$, não temos evidência para rejeitar $H_0$ a favor de $H_1$.
+
+
+c) Interprete o coeficiente de *profmarg*, ele é economicamente grande?
+
+Interpretação: a cada aumento de uma unidade em *profmarg* é esperado, em média e mantendo todos os outros preditores fixos, um aumento de $0.05$ na variável resposta *rdintens*. Não, ele não é economicamente grande, note que não foi significativo.
+
+
+d) *profmarg* tem um efeito estatisticamente significativo sobre *rdintens*?
+
+Não, o efeito não é estatísticamente significativo.
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 5
+
+Utilizando o dataset *gpa1*, ajuste um modelo que explique a nota média em um curso superior (*colGPA*) utilizando o número de faltas às aulas por semana (*skipped*), horas de estudo semanais (*hsGPA*) e a nota do *ACT* (equivalente ao vestitubular). Assumindo
+que as hipóteses do modelo linear clássico acontecem:
+
+  a) Encontre um intervalo de confiança $95\%$ para $\beta_{hsGPA}$.
+  b) Teste $H_0∶ \beta_{hsGPA} = 0.4 \;\; V.S. \;\; H_1∶ \beta_{hsGPA} \neq 0.4$.
+  c) Você pode rejeitar a hipóteses $H_0: \beta_{hsGPA} = 1$ contra a alternativa bilateral ($H_1: \beta_{hsGPA} \neq 1$)?
+  d) Teste a hipótese nula de que, uma vez tendo sido controlado as horas de estudo semanais, o efeito de *skipped* e *ACT* sobre *colGPA* são, conjuntamente, nulos.
+:::
+
+  a) Encontre um intervalo de confiança $95\%$ para $\beta_{hsGPA}$.
+
+::: {.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+model_r <- lm(colGPA ~ skipped + hsGPA + ACT, data = gpa1)  # ajustando modelo
+confint(model_r, level = 0.95)  # intervalo de confianca
+```
+
+
+## Python
+```{python}
+# lendo dados
+gpa1 = woo.dataWoo('gpa1')
+gpa1 = r['gpa1']  # leitura alternativa (direto do R)
+
+# ajustando modelo
+model_py = smf.ols(formula='colGPA ~ skipped + hsGPA + ACT', data=gpa1).fit()
+ic = model_py.conf_int()
+ic.columns = ['2.5%', '97.5%']
+print(ic)
+```
+
+
+## Julia
+```{julia}
+gpa1 = DataFrame(wooldridge("gpa1"));
+model_julia = lm(@formula(colGPA ~ skipped + hsGPA + ACT), gpa1);
+results = DataFrame(
+    Term = coefnames(model_julia),
+    LowerCI = confint(model_julia)[:, 1],
+    UpperCI = confint(model_julia)[:, 2]
+)
+```
+
+:::
+
+
+  b) Teste $H_0∶ \beta_{hsGPA} = 0.4 \;\; V.S. \;\; H_1∶ \beta_{hsGPA} \neq 0.4$.
+
+::: {.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+coef_hsGPA <- coef(model_r)['hsGPA']
+ep_hsGPA <- summary(model_r)$coefficients['hsGPA', 'Std. Error']
+
+valor_t <- (coef_hsGPA - 0.4) / ep_hsGPA
+
+gl <- model_r$df.residual
+p_valor <- 2*pt(-abs(valor_t), gl)  # P(|t| > |t_obs|) = 2 P(t < -|t_obs|) 
+
+cat(paste0('Valor t:', round(valor_t, 4), '\n', 'p-valor:', round(p_valor, 4)))
+```
+
+
+## Python
+```{python}
+import scipy.stats as stats
+
+coef_hsGPA = model_py.params['hsGPA']
+ep_hsGPA = model_py.bse['hsGPA']
+
+valor_t = (coef_hsGPA - 0.4) / ep_hsGPA
+
+gl = model_py.df_resid
+p_valor = 2 * stats.t.cdf(-abs(valor_t), gl)  # P(|t| > |t_obs|) = 2 P(t < -|t_obs|) 
+
+print(f'Valor t: {valor_t:4f} \np-valor: {p_valor:4f}')
+```
+
+
+## Julia
+```{julia}
+coef_hsGPA = coef(model_julia)[3];
+ep_hsGPA = stderror(model_julia)[3];
+
+valor_t = (coef_hsGPA - 0.4) / ep_hsGPA;
+
+gl = 137;
+
+p_valor = 2 * cdf(TDist(gl), -abs(valor_t))
+```
+
+:::
+
+  
+  c) Você pode rejeitar a hipóteses $H_0: \beta_{hsGPA} = 1$ contra a alternativa bilateral ($H_1: \beta_{hsGPA} \neq 1$)?
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+valor_t <- (coef_hsGPA - 1) / ep_hsGPA
+
+gl <- model_r$df.residual
+p_valor <- 2*pt(-abs(valor_t), gl)  # P(|t| > |t_obs|) = 2 P(t < -|t_obs|) 
+
+cat(paste0('Valor t:', round(valor_t, 4), '\n', 'p-valor:', round(p_valor, 4)))
+```
+
+## Python
+```{python}
+coef_hsGPA = model_py.params['hsGPA']
+ep_hsGPA = model_py.bse['hsGPA']
+
+valor_t = (coef_hsGPA - 1) / ep_hsGPA
+
+gl = model_py.df_resid
+p_valor = 2 * stats.t.cdf(-abs(valor_t), gl)  # P(|t| > |t_obs|) = 2 P(t < -|t_obs|) 
+
+print(f'Valor t: {valor_t:4f} \np-valor: {p_valor:4f}')
+```
+
+## Julia
+```{julia}
+coef_hsGPA = coef(model_julia)[3];
+ep_hsGPA = stderror(model_julia)[3];
+
+valor_t = (coef_hsGPA - 1) / ep_hsGPA
+
+gl = 137;
+
+p_valor = 2 * cdf(TDist(gl), -abs(valor_t))
+```
+
+:::
+
+  d) Teste a hipótese nula de que, uma vez tendo sido controlado as horas de estudo semanais, o efeito de *skipped* e *ACT* sobre *colGPA* são, conjuntamente, nulos.
+
+Hipóteses:
+$$
+H_0: \beta_{skipped} = \beta_{ACT} = 0 \quad V.S. \quad H_1: \beta_{skipped} \neq 0 \text{ ou } \beta_{ACT} \neq 0
+$$
+
+A estatística do teste é dada por:
+
+$$
+F = \frac{(SQR_r - SQR_i)/q}{SQR_i/(n-(k+1))} \overset{H_0}{\sim} F_{q, n-(k+1)}
+$$
+onde $SQR_i$ é a soma dos resíduos do modelo irrestrito (completo) e $SQR_r$ é a soma dos resíduos do modelo reduzido, isto é, o modelo irrestrito sem as preditoras que se deseja testar.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+# Ajustando modelo completo e reduzido
+modelo_completo <- lm(colGPA ~ skipped + hsGPA + ACT, data = gpa1)
+modelo_reduzido <- lm(colGPA ~ hsGPA, data = gpa1)
+anova(modelo_reduzido, modelo_completo)
+```
+
+
+## Python
+```{python}
+import statsmodels.api as sm
+
+# ajustando modelo completo e reduzido
+modelo_completo = smf.ols(formula='colGPA ~ skipped + hsGPA + ACT', data=gpa1).fit()
+modelo_reduzido = smf.ols(formula='colGPA ~ hsGPA', data=gpa1).fit()
+sm.stats.anova_lm(modelo_reduzido, modelo_completo)
+```
+
+
+## Julia
+```{julia}
+modelo_completo = lm(@formula(colGPA ~ skipped + hsGPA + ACT), gpa1);
+modelo_reduzido = lm(@formula(colGPA ~ hsGPA), gpa1);
+ftest(modelo_reduzido.model, modelo_completo.model)
+```
+
+:::
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 6
+
+Utilize o conjunto de dados *wage2* e ajuste a regressão
+$$
+\log(wage) = \beta_0 + \beta_1 educ + \beta_2 exper + \beta_3 tenure + u
+$$
+em que *wage* é o salario-hora em dolares, *educ* são os anos de educação formal, *exper* são os anos de experiência no mercado de trabalho e *tenure* são os anos de permanencia no emprego atual.
+
+  a) Teste a hipótede de significância geral do modelo.
+  b) Teste a hipótese de que um ano a mais de experiência no mercado de trabalho tem o mesmo efeito sobre $\log(wage)$ que mais um ano de permanencia no emprego atual.
+  c) Teste a hipótese de que, controlado o número de anos de permanencia no emprego (*tenure*), *educ* e *exper* não tem efeito nenhum sobre $\log(wage)$.
+:::
+
+  a) Teste a hipótese de significância geral do modelo.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+# Ajustar o modelo de regressão
+fit_r <- lm(log(wage) ~ educ + exper + tenure, data = wage2)
+summary(fit_r)
+```
+
+
+## Python
+```{python}
+wage2 = woo.dataWoo('wage2')
+wage2 = r['wage2']  # leitura alternativa (direto do R)
+
+fit_py = smf.ols('np.log(wage) ~ educ + exper + tenure', data=wage2).fit()
+fit_py.summary()
+```
+
+
+## Julia
+```{julia}
+wage2 = DataFrame(wooldridge("wage2"));
+fit_julia = lm(@formula(log(wage) ~ educ + exper + tenure), wage2);
+ftest(fit_julia.model)
+```
+
+:::
+
+  b) Teste a hipótese de que um ano a mais de experiência no mercado de trabalho tem o mesmo efeito sobre $\log(wage)$ que mais um ano de permanencia no emprego atual.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+require(car)
+
+fit_r <- lm(log(wage) ~ educ + exper + tenure, data=wage2)
+linearHypothesis(fit_r, 'exper - tenure = 0')
+```
+
+
+## Python
+```{python, warning=F}
+fit_py = smf.ols(formula='np.log(wage) ~ educ + exper + tenure', data=wage2).fit()
+restricao = 'exper - tenure = 0'
+resultado = fit_py.wald_test(restricao)
+print(resultado)
+```
+
+
+## Julia
+```{julia}
+# function wald_test(;Sigma, b, Terms = nothing, L = nothing, H0 = nothing, df = nothing, print_result = true)
+#     if Terms == nothing && L == nothing
+#         error("One of the arguments Terms or L must be used.")
+#     end
+#     if Terms != nothing && L != nothing
+#         error("Only one of the arguments Terms or L must be used.")
+#     end
+#     if Terms == nothing
+#         w = size(L)[1]
+#         Terms = (1:length(b))[(sum(L, dims = 1) .> 0)[1, :]]
+#     else
+#         w = length(Terms)
+#     end
+#     if H0 == nothing
+#         H0 = fill(0, w)
+#     end
+#     if w != length(H0)
+#         error("Vectors of tested coefficients and of null hypothesis have different lengths\n")
+#     end
+#     if L == nothing
+#         L = fill(0, w, length(b))
+#         for i in 1:w
+#             L[i, Terms[i]] = 1
+#         end
+#     end
+#     f = L * b
+#     V = Sigma
+#     mat = inv(L * V * L')
+#     statistic = (f - H0)' * mat * (f - H0)
+#     p = ccdf(Chisq(w), statistic)
+#     if df == nothing
+#         res = Dict("chi2" => (chi2 = statistic, df = w, P = p))
+#     else
+#         fstat = statistic/size(L)[1]
+#         df1 = size(L)[1]
+#         df2 = df
+#         res = Dict("chi2" => (chi2 = statistic, df = w, P = p),
+#             "Ftest" => (Fstat = fstat, df1 = df1, df2 = df2, P = ccdf(FDist(df1, df2), fstat)))
+#     end
+# 
+#     if print_result == true
+#         println("Wald test:\n", "----------\n\n", "Chi-squared test:\n",
+#             "X2 = ", res["chi2"].chi2, ", df = ", res["chi2"].df, ", P(> X2) = ", res["chi2"].P)
+#         if df != nothing
+#             println("\nF test:\n",
+#             "W = ", res["Ftest"].Fstat, ", df1 = ", res["Ftest"].df1, ", df2 = ", res["Ftest"].df2, ", P(> W) = ", res["Ftest"].P)
+#         end
+#     end
+# 
+#     return (Sigma = Sigma, b = b, Terms = Terms, H0 = H0, L = L, result = res, df = df)
+# end
+# 
+# # include("wald_test.jl")
+# fit_julia_completo = lm(@formula(log(wage) ~ educ + exper + tenure), wage2);
+# fit_julia_reduzido = lm(@formula(log(wage) ~ educ + (exper + tenure), wage2);
+# wald_test(Sigma = vcov(fit_julia_completo), b = coef(fit_julia_reduzido), Terms = 2:3)
+# ftest(fit_julia_completo.model, fit_julia_reduzido.model)
+
+```
+
+:::
+
+
+  c) Teste a hipótese de que, controlado o número de anos de permanencia no emprego (*tenure*), *educ* e *exper* não tem efeito nenhum sobre $\log(wage)$.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+mod_completo <- lm(log(wage) ~ educ + exper + tenure, data=wage2)
+mod_reduzido <- lm(log(wage) ~ tenure, data=wage2)
+anova(mod_reduzido, mod_completo)
+```
+
+
+## Python
+```{python}
+mod_completo = smf.ols(formula='np.log(wage) ~ educ + exper + tenure', data=wage2).fit()
+mod_reduzido = smf.ols(formula='np.log(wage) ~ tenure', data=wage2).fit()
+sm.stats.anova_lm(mod_reduzido, mod_completo)
+```
+
+
+## Julia
+```{julia}
+fit_julia_completo = lm(@formula(log(wage) ~ educ + exper + tenure), wage2);
+fit_julia_reduzido = lm(@formula(log(wage) ~ tenure), wage2);
+ftest(fit_julia_completo.model, fit_julia_reduzido.model)
+```
+
+:::
+
+
+<br><br>
+
+
+::: {.callout-note icon=false}
+## Questão 7
+
+Utilize o conjunto de dados *htv* e ajuste a regressão
+$$
+educ = \beta_0 + \beta_1 motheduc + \beta_2 fatheduc + \beta_3 abil + \beta_4 abil^2 + u
+$$
+
+  a) Teste a hipóteses de que a influencia que *motheduc* e *fatheduc* exercem sobre *educ* é a mesma.
+  b) Teste a hipótese de que *educ* está linearmente relacionado com *abil* contra a alternativa que diz que a relação é quadrática.
+  c) Um colega de trabalho diz que o modelo $educ = \beta_0 + \beta_1 abil + \beta_2 abil^2 + u$ é suficiente,
+e que tanto *motheduc* e *fatheduc* não são importantes para o modelos. Faça um teste de hipóteses para rejeitar ou não rejeitar a hipótese do seu colega.
+:::
+
+
+  a) Teste a hipóteses de que a influencia que *motheduc* e *fatheduc* exercem sobre *educ* é a mesma.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+# require(car)
+
+fit_r <- lm(educ ~ motheduc + fatheduc + abil + I(abil^2), data=htv)
+linearHypothesis(fit_r, 'motheduc - fatheduc = 0')
+```
+
+## Python
+```{python, warning=F}
+htv = woo.dataWoo('htv')
+htv = r['htv']  # leitura alternativa (direto do R)
+
+fit_py = smf.ols('educ ~ motheduc + fatheduc + abil + I(abil**2)', data=htv).fit()
+restricao = 'motheduc - fatheduc = 0'
+resultado = fit_py.wald_test(restricao)
+
+print(resultado)
+```
+
+
+## Julia
+
+:::
+
+  b) Teste a hipótese de que *educ* está linearmente relacionado com *abil* contra a alternativa que diz que a relação é quadrática.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+fit_completo <- lm(educ ~ motheduc + fatheduc + abil + I(abil^2), data=htv)
+fit_reduzido <- lm(educ ~ motheduc + fatheduc + abil, data=htv)
+anova(fit_completo, fit_reduzido)
+```
+
+
+## Python
+```{python}
+fit_completo = smf.ols(formula='educ ~ motheduc + fatheduc + abil + I(abil**2)',
+                       data=htv).fit()
+fit_reduzido = smf.ols(formula='educ ~ motheduc + fatheduc + abil', data=htv).fit()
+sm.stats.anova_lm(fit_reduzido, fit_completo)
+```
+
+
+## Julia
+```{julia}
+htv = DataFrame(wooldridge("htv"));
+fit_julia_completo = lm(@formula(educ ~ motheduc + fatheduc + abil + abil^2), htv);
+fit_julia_reduzido = lm(@formula(educ ~ motheduc + fatheduc + abil), htv);
+ftest(fit_julia_completo.model, fit_julia_reduzido.model)
+```
+
+:::
+
+  c) Um colega de trabalho diz que o modelo $educ = \beta_0 + \beta_1 abil + \beta_2 abil^2 +𝑢$ é suficiente, e que tanto *motheduc* e *fatheduc* não são importantes para o modelos. Faça um teste de hipóteses para rejeitar ou não rejeitar a hipótese do seu colega.
+
+:::{.panel-tabset}
+
+## R
+```{r, warning=F, message=F}
+fit_completo <- lm(educ ~ motheduc + fatheduc + abil + I(abil^2), data=htv)
+fit_reduzido <- lm(educ ~ abil + I(abil^2), data=htv)
+anova(fit_completo, fit_reduzido)
+```
+
+
+## Python
+```{python}
+fit_completo = smf.ols(formula='educ ~ motheduc + fatheduc + abil + I(abil**2)',
+                       data=htv).fit()
+fit_reduzido = smf.ols(formula='educ ~ abil + I(abil**2)', data=htv).fit()
+sm.stats.anova_lm(fit_reduzido, fit_completo)
+```
+
+
+## Julia
+```{julia}
+fit_julia_completo = lm(@formula(educ ~ motheduc + fatheduc + abil + abil^2), htv);
+fit_julia_reduzido = lm(@formula(educ ~ abil + abil^2), htv);
+ftest(fit_julia_completo.model, fit_julia_reduzido.model)
+```
+
+:::

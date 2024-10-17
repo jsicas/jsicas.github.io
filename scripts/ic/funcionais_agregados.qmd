@@ -1,0 +1,202 @@
+---
+title: 'Dados Funcionais Agregados'
+format:
+  html:
+    code-fold: true
+    embed-resources: true
+    toc: true
+    toc-expand: 3
+    theme:
+      dark: darkly
+      light: flatly
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    fig.width: 9
+    fig.height: 4
+---
+
+::: {.hidden}
+```{css, echo=FALSE}
+p {
+  text-align: justify
+}
+
+details {
+    border: 2px solid #272726; /* Borda ao redor do elemento */
+    border-radius: 5px; /* Arredondamento das bordas */
+    padding: 10px; /* Espaçamento interno */
+    margin-top: 10px; /* Espaçamento superior */
+}
+```
+
+$$
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\posto}{posto}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\p}{\mathbb{P}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\bm}[1]{\mathbf{#1}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\norm}{\mathcal{N}}
+$$
+:::
+
+# Teoria
+
+Considere, para o caso discreto, as observações $\{(t_m, A_i (t_m), m=1,\dots,M, \; i=1,\dots,I)\}$, com
+$$
+A_i (t_m) = \sum_{l=1}^L y_{il} \alpha_l (t_m) + e_i(t_m) \quad ,\; i=1,\dots,I \;\;\; m = 1,\dots, M = 2^J
+$$
+onde $y_{il}$ é o peso associado à $i$-ésima observação e $l$-ésima função componente, $\alpha_l(\cdot)$ é a função componente $l$ desconhecida, $e(t_m)$ é o erro gaussiano com média $0$ e variância $\sigma^2$ desconhecida, $\sigma>0$. Além disso, as $I$ amostras devem ser obtidas para os mesmos $t_1,\dots,t_M$, contudo, os pesos $y_{il}$ da combinação lienar pode ser **diferentes** entre as amostras.
+
+Então, para estimar as funções $\alpha_l$ é necessário expandir as $L$ funções por uma base de ondaletas, então, $\alpha_l$ pode ser reescrito como
+$$
+\alpha_l (t) = \sum_{j,k \in \NN} \gamma_{jk}^{(l)} \psi_{jk}(t) \quad , \; l=1,\dots,L
+$$
+onde $\{\psi_{jk}(x) = 2^{j/2} \psi(2^j x - k)\}_{j,k \in \NN}$ é uma base ortonormal de ondaleta com $\gamma_{jk}^{(l)}$ sendo o coeficiente de ondaleta da $l$-ésima função.
+
+Matricialmente, temos
+$$
+\bs{A} = \bs\alpha \bs y + \bs e 
+$$
+onde $\bs A = (A_{mi} = A_i(t_m))_{M \times I}$, $\bs\alpha = (\alpha_{ml} = \alpha_l(t_m))_{M \times L}$, $\bs y = (y_{li})_{L \times I}$ e $\bs e = (e_{mi} = e_i(t_m))_{M \times I}$.
+
+Então, aplicando a DWT, temos
+\begin{align*}
+W\bs{A} &= W\bs\alpha \bs{y} + W\bs{e}\\
+\bs{D} &= \bs\Gamma \bs{y} + \bs\varepsilon
+\end{align*}
+onde $\bs{D}$ é a matriz com os coeficientes de ondaleta empíricos das curvas componentes, $\bs\Gamma$ é a matriz com os coeficientes de ondaleta verdadeiros das curvas agregadas e $\bs\varepsilon$ é o erro gaussiano com média $0$ e variâncioa $\sigma^2$ desconhecida, $\sigma>0$.
+
+Para um coeficiente empírico de ondaleta $d_{mi}$ de $\bs{D}$ o modelo é dado por:
+$$
+d_{mi} = \sum_{l=1}^L y_{li} \gamma_{ml} + \varepsilon_{mi}
+$$
+
+Além disso, vale ressaltar que os pesos $\bs y$ no domínio do tempo permanecem os **mesmos** no domínio das ondaletas. 
+
+Além disso, considere $\bs\delta(\bs D) = (\delta(d_{mi}))$, então $\bs\Gamma$ pode ser obtido por OLS:
+
+$$
+\hat{\bs\Gamma} = \bs\delta(\bs D) \bs{y}'(\bs{y}\bs{y}')^{-1}
+$$
+Então, basta obter $\hat{\bs\alpha}$ pela IDWT, onde $\hat{\bs\alpha} = W' \hat{\bs\Gamma}$. Para mais detalhes, ver Sousa (2022) e Saraiva (2009).
+
+
+# Aplicações
+
+Foram feitas duas aplicações, uma em dados simulados baseados nas funções de Donoho e Jhonstone e a outra nos dados (tecator) da curva de absorbância da carne.
+
+
+## Dados Simulados
+
+Foram utilizadas as funções Bumps e Doppler com $SNR=3$ e $5$ considerando $1024$ pontos por curva.
+
+```{r, warning=F, message=F}
+######## packages e configurações ########
+set.seed(282829)
+setwd('C:/Users/jvsiq/Desktop/Estudo e Afins/IC - FAPESP/codigo')
+
+require(wavethresh)
+require(fda.usc)
+
+data('tecator')
+source('f_test.R')
+
+######## Funções ########
+bumps <- f_test()$bumps
+doppler <- f_test()$doppler
+par(mfrow=c(1,2))
+plot(bumps, type='l', main='Bumps')
+plot(doppler, type='l', main='Doppler'); par(mfrow=c(1,1))
+```
+
+### $SNR=3$
+```{r}
+# gerando banco de dados
+y1 <- runif(10)  # pesos da curva 1
+y2 <- 1 - y1     # pesos da curva 2
+
+y <- matrix(c(y1, y2), nrow=2, byrow=T)  # pesos
+fun_agr <- matrix(0, length(y1), 1024)   # observacoes
+
+# gerando amostra com snr=3
+for (i in 1:length(y1)) fun_agr[i,] <- y1[i]*bumps + y2[i]*doppler + rnorm(1024, 0, 7/3)
+plot(1, main='Amostra',xlim=c(0,1010),ylim=c(-15, 58),type='n',xlab='',ylab='')
+for (i in 1:length(y1)) lines(fun_agr[i,], col=i)
+
+# dominio das ondaletas
+D <- apply(fun_agr, MARGIN=1, wd)                 # coeficientes empiricos
+D_shrink <- sapply(D, function(x = threshold(D)) c(accessC(x, level=0), x$D))
+gamma <- D_shrink %*% t(y) %*% solve(y %*% t(y))  # coeficientes de ondaletas estimados
+alpha <- GenW(n=1024) %*% gamma                   # funções recuperadas
+
+# funções recuperadas
+plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')      # bumps
+plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')  # doppler
+```
+
+
+### $SNR=5$
+```{r}
+# gerando banco de dados
+y1 <- runif(10)  # pesos da curva 1
+y2 <- 1 - y1     # pesos da curva 2
+
+y <- matrix(c(y1, y2), nrow=2, byrow=T)  # pesos
+fun_agr <- matrix(0, length(y1), 1024)   # observacoes
+
+# gerando amostra com snr=5
+for (i in 1:length(y1)) fun_agr[i,] <- y1[i]*bumps + y2[i]*doppler + rnorm(1024, 0, 7/5)
+plot(1, main='Amostra',xlim=c(0,1010),ylim=c(-15, 57),type='n',xlab='',ylab='')
+for (i in 1:length(y1)) lines(fun_agr[i,], col=i)
+
+# dominio das ondaletas
+D <- apply(fun_agr, MARGIN=1, wd)                 # coeficientes empiricos
+D_shrink <- sapply(D, function(x = threshold(D)) c(accessC(x, level=0), x$D))
+gamma <- D_shrink %*% t(y) %*% solve(y %*% t(y))  # coeficientes de ondaletas estimados
+alpha <- GenW(n=1024) %*% gamma                   # funções recuperadas
+
+# funções recuperadas
+plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')      # bumps
+plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')  # doppler
+```
+
+
+## Tecator
+
+Conjunto de dados que contém a espectrometria da carne. Foi necessário transformar o banco de dados para um conjunto de vetores diádicos.
+
+```{r}
+# Tecator
+fun_tec <- tecator$absorp.fdata[,20:83]
+pesos <- t(tecator$y)
+
+plot(fun_tec)
+
+D <- apply(fun_tec$data, MARGIN=1, wd)
+D_shrink <- sapply(D, function(x = threshold(D)) c(accessC(x, level=0), x$D))
+gamma <- D_shrink %*% t(pesos) %*% solve(pesos %*% t(pesos))
+alpha <- GenW(n=64) %*% gamma
+
+# funções recuperadas tecator
+plot(alpha[,1], type='l', col='blue', main='Gordura')
+plot(alpha[,2], type='l', col='blue', main='Água')
+plot(alpha[,3], type='l', col='blue', main='Proteina')
+```
+
+
+# Referências
+
+::: {#refs}
+- Sousa, A.R.S (2022). A wavelet-based method in aggregated functional data analysis. *Monte Carlo Methods and Applications*. Vol. 30 (edição 1), pp. 19-30. https://doi.org/10.1515/mcma-2023-2016
+
+- Saraiva, M.A., Dias, R. (2009). *Análise Não-Paramétrica de Dados Funcionais: uma Aplicação à Quimiometria*. Campinas: Universidade Estadual de Campinas.
+:::
+
+
+
