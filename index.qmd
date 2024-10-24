@@ -6,8 +6,6 @@ format:
     include-in-header: mathjax1.html
 ---
 
-Link da [Lista 3](listas_econometria/Lista3_Resolucao_ME715.qmd)
-Link da [Lista 4](listas_econometria/Lista4_Resolucao_ME715.qmd)
 Link da [Reunião](scripts/ic/funcionais_agregados.qmd)
 
 [about](about.qmd#section)

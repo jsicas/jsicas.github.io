@@ -5,7 +5,7 @@ format:
     code-fold: true
     embed-resources: true
     toc: true
-    toc-expand: 3
+    toc-expand: 4
     theme:
       dark: darkly
       light: flatly
@@ -102,10 +102,8 @@ set.seed(282829)
 setwd('C:/Users/jvsiq/Desktop/Estudo e Afins/IC - FAPESP/codigo')
 
 require(wavethresh)
-require(fda.usc)
-
-data('tecator')
-source('f_test.R')
+require(knitr)
+require(ic)
 
 ######## Funções ########
 bumps <- f_test()$bumps
@@ -116,6 +114,7 @@ plot(doppler, type='l', main='Doppler'); par(mfrow=c(1,1))
 ```
 
 ### $SNR=3$
+
 ```{r}
 # gerando banco de dados
 y1 <- runif(10)  # pesos da curva 1
@@ -128,7 +127,11 @@ fun_agr <- matrix(0, length(y1), 1024)   # observacoes
 for (i in 1:length(y1)) fun_agr[i,] <- y1[i]*bumps + y2[i]*doppler + rnorm(1024, 0, 7/3)
 plot(1, main='Amostra',xlim=c(0,1010),ylim=c(-15, 58),type='n',xlab='',ylab='')
 for (i in 1:length(y1)) lines(fun_agr[i,], col=i)
+```
 
+#### Frequentista
+
+```{r}
 # dominio das ondaletas
 D <- apply(fun_agr, MARGIN=1, wd)                 # coeficientes empiricos
 D_shrink <- sapply(D, function(x = threshold(D)) c(accessC(x, level=0), x$D))
@@ -136,12 +139,60 @@ gamma <- D_shrink %*% t(y) %*% solve(y %*% t(y))  # coeficientes de ondaletas es
 alpha <- GenW(n=1024) %*% gamma                   # funções recuperadas
 
 # funções recuperadas
-plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')      # bumps
-plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')  # doppler
+plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')
+plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')
+
+# calculando erro
+MSE_1 <- sum((alpha[,1] - bumps)^2) / length(bumps)     # MSE da fç componente 1 (bumps)
+MSE_2 <- sum((alpha[,2] - doppler)^2) / length(doppler) # MSE da fç componente 2 (doppler)
+AMSE <- (MSE_1 + MSE_2) / 2
+
+kable(data.frame(MSE_1, MSE_2, AMSE))
+```
+
+
+#### Bayesiano
+```{r}
+# dominio das ondaletas
+D_shrink_bayes <- sapply(D, function(x = D) c(accessC(x, lev=0),
+                            logis_shrink(x$D, 0.8, 1, 2)))
+gamma_bayes <- D_shrink_bayes %*% t(y) %*% solve(y %*% t(y))  # coefs de ondaletas estimados
+alpha_bayes <- GenW(n=1024) %*% gamma_bayes                   # funções recuperadas
+
+# funcoes recuperadas pelo metodo bayesiano
+plot(alpha_bayes[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')
+plot(alpha_bayes[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')
+
+# calculando erro
+MSE_bayes_1 <- sum((alpha_bayes[,1] - bumps)^2) / length(bumps)     # MSE da fç componente 1 (bumps)
+MSE_bayes_2 <- sum((alpha_bayes[,2] - doppler)^2) / length(doppler) # MSE da fç componente 2 (doppler)
+AMSE_bayes <- (MSE_bayes_1 + MSE_bayes_1) / 2
+
+kable(data.frame(MSE_bayes_1, MSE_bayes_2, AMSE_bayes))
+```
+
+
+#### Frequentista X Bayesiano
+```{r}
+# comparacao entre funcoes recuperadas pelos 2 metodos
+plot(alpha[,1], type='l', col='red');lines(alpha_bayes[,1], col='blue');lines(bumps)
+legend('topright', legend=c('Verdadeiro', 'Bayes', 'Freq'),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+plot(alpha[,2], type='l', col='red');lines(alpha_bayes[,2], col='blue');lines(doppler)
+legend('topright', legend=c('Verdadeiro', 'Bayes', 'Freq'),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+kable(data.frame('Medida'=c('Bumps', 'Doppler', 'AMSE'),
+                 'Frequentista'=c(MSE_1, MSE_2, AMSE),
+                 'Bayesiano'=c(MSE_bayes_1, MSE_bayes_2, AMSE_bayes)))
+
 ```
 
 
 ### $SNR=5$
+
+#### Frequentista
 ```{r}
 # gerando banco de dados
 y1 <- runif(10)  # pesos da curva 1
@@ -162,16 +213,59 @@ gamma <- D_shrink %*% t(y) %*% solve(y %*% t(y))  # coeficientes de ondaletas es
 alpha <- GenW(n=1024) %*% gamma                   # funções recuperadas
 
 # funções recuperadas
-plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')      # bumps
-plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')  # doppler
+plot(alpha[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')
+plot(alpha[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')
 ```
+
+
+#### Bayesiano
+```{r}
+# dominio das ondaletas
+D_shrink_bayes <- sapply(D, function(x = D) c(accessC(x, lev=0),
+                            logis_shrink(x$D, 0.8, 1, 2)))
+gamma_bayes <- D_shrink_bayes %*% t(y) %*% solve(y %*% t(y))  # coefs de ondaletas estimados
+alpha_bayes <- GenW(n=1024) %*% gamma_bayes                   # funções recuperadas
+
+# funcoes recuperadas pelo metodo bayesiano
+plot(alpha_bayes[,1], type='l', col='blue', main='Bumps Recuperada'); lines(bumps, type='l')
+plot(alpha_bayes[,2], type='l', col='blue', main='Doppler Recuperada'); lines(doppler, type='l')
+
+# calculando erro
+MSE_bayes_1 <- sum((alpha_bayes[,1] - bumps)^2) / length(bumps)     # MSE da fç componente 1 (bumps)
+MSE_bayes_2 <- sum((alpha_bayes[,2] - doppler)^2) / length(doppler) # MSE da fç componente 2 (doppler)
+AMSE_bayes <- (MSE_bayes_1 + MSE_bayes_1) / 2
+
+kable(data.frame(MSE_bayes_1, MSE_bayes_2, AMSE_bayes))
+```
+
+
+#### Frequentista X Bayesiano
+```{r}
+# comparacao entre funcoes recuperadas pelos 2 metodos
+plot(alpha[,1], type='l', col='red');lines(alpha_bayes[,1], col='blue');lines(bumps)
+legend('topright', legend=c('Verdadeiro', 'Bayes', 'Freq'),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+plot(alpha[,2], type='l', col='red');lines(alpha_bayes[,2], col='blue');lines(doppler)
+legend('topright', legend=c('Verdadeiro', 'Bayes', 'Freq'),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+kable(data.frame('Medida'=c('Bumps', 'Doppler', 'AMSE'),
+                 'Frequentista'=c(MSE_1, MSE_2, AMSE),
+                 'Bayesiano'=c(MSE_bayes_1, MSE_bayes_2, AMSE_bayes)))
+
+```
+
 
 
 ## Tecator
 
 Conjunto de dados que contém a espectrometria da carne. Foi necessário transformar o banco de dados para um conjunto de vetores diádicos.
 
-```{r}
+```{r, warning=F, message=F}
+require(fda.usc)
+data('tecator')
+
 # Tecator
 fun_tec <- tecator$absorp.fdata[,20:83]
 pesos <- t(tecator$y)
@@ -189,14 +283,59 @@ plot(alpha[,2], type='l', col='blue', main='Água')
 plot(alpha[,3], type='l', col='blue', main='Proteina')
 ```
 
+```{r}
+# utilizando alpha=0.5
+curve(logis_shrink(x, 0.5, 0.25, 1), -3, 3, n=500)
+D <- apply(fun_tec$data, MARGIN=1, wd)  # DWT
+D_shrink_bayes_5 <- sapply(D, function(x = D) c(accessC(x, level=0),
+                                              logis_shrink(x$D,0.5,0.25,1)))
+gamma_bayes_5 <- D_shrink_bayes_5 %*% t(pesos) %*% solve(pesos %*% t(pesos))
+alpha_bayes_5 <- GenW(n=64) %*% gamma_bayes_5
+
+# utilizando alpha=0.85
+curve(logis_shrink(x, 0.85, 0.25, 1), -3, 3, n=500, add=T, col='blue')
+D <- apply(fun_tec$data, MARGIN=1, wd)  # DWT
+D_shrink_bayes_85 <- sapply(D, function(x = D) c(accessC(x, level=0),
+                                                 logis_shrink(x$D,0.85,0.25,1)))
+gamma_bayes_85 <- D_shrink_bayes_85 %*% t(pesos) %*% solve(pesos %*% t(pesos))
+alpha_bayes_85 <- GenW(n=64) %*% gamma_bayes_85
+
+# Comparacao
+plot(alpha[,1], type='l', main='Gordura', col='red', ylim=c(0.039, 0.051))
+lines(alpha_bayes_5[,1], col='blue'); lines(alpha_bayes_85[,1], col='darkgreen')
+legend('bottomright', legend=c('Bayes 50', 'Bayes 85', 'Freq'),
+       col=c('red', 'blue', 'darkgreen'), lwd=2, bty='n')
+
+plot(alpha[,2], type='l', main='Água', col='red', ylim=c(0.0031, 0.0188))
+lines(alpha_bayes_5[,2], col='blue'); lines(alpha_bayes_85[,2], col='darkgreen')
+legend('bottomright', legend=c('Bayes 50', 'Bayes 85', 'Freq'),
+       col=c('red', 'blue', 'darkgreen'), lwd=2, bty='n')
+
+plot(alpha[,3], type='l', main='Proteina', col='red', ylim=c(0.085, 0.114))
+lines(alpha_bayes_5[,3], col='blue'); lines(alpha_bayes_85[,3], col='darkgreen')
+legend('topright', legend=c('Bayes 50', 'Bayes 85', 'Freq'),
+       col=c('red', 'blue', 'darkgreen'), lwd=2, bty='n')
+```
+
 
 # Referências
 
 ::: {#refs}
-- Sousa, A.R.S (2022). A wavelet-based method in aggregated functional data analysis. *Monte Carlo Methods and Applications*. Vol. 30 (edição 1), pp. 19-30. https://doi.org/10.1515/mcma-2023-2016
+- Sousa, A.R.S (2022). A wavelet-based method in aggregated functional data analysis. *Monte Carlo Methods and Applications*. Vol. 30 (ed. 1), pp. 19-30. https://doi.org/10.1515/mcma-2023-2016.
 
 - Saraiva, M.A., Dias, R. (2009). *Análise Não-Paramétrica de Dados Funcionais: uma Aplicação à Quimiometria*. Campinas: Universidade Estadual de Campinas.
 :::
+
+
+# Funções do Pacote
+```{r, echo=F}
+print('f_test:')
+f_test
+
+print('logis_shrink:')
+logis_shrink
+```
+
 
 
 
