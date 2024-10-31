@@ -6,7 +6,6 @@ format:
     include-in-header: mathjax1.html
 ---
 
-Link da [Reunião](scripts/ic/funcionais_agregados.qmd)
-Link da [Reunião 31/10](scripts/ic/funcionais_agregados.qmd)
+Link da [Reunião 31/10](scripts/ic/politica_de_limiar.qmd)
 
 
