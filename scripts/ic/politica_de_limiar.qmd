@@ -1,0 +1,445 @@
+---
+title: 'Simulação: Política de Limiar'
+lang: pt
+crossref:
+  eq-prefix: 'Eq. '
+format:
+  html:
+    # html-math-method: katex
+    page-layout: full
+    code-fold: true
+    embed-resources: true
+    toc: true
+    toc-location: left
+    toc-expand: 4
+    number-depth: 4
+    theme:
+      dark: darkly
+      light: flatly
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    fig.width: 9
+    fig.height: 4
+editor_options: 
+  chunk_output_type: console
+---
+
+::: {.hidden}
+```{css, echo=FALSE}
+p {
+  text-align: justify
+}
+
+details {
+    border: 2px solid #272726; /* Borda ao redor do elemento */
+    border-radius: 5px; /* Arredondamento das bordas */
+    padding: 10px; /* Espaçamento interno */
+    margin-top: 10px; /* Espaçamento superior */
+}
+```
+
+$$
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\posto}{posto}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\ind}{\mathcal{I}}      % Função indicadora
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\p}{\mathbb{P}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\bm}[1]{\mathbf{#1}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\LL}{\mathcal{L}}       % Verosimilhança
+\newcommand{\norm}{\mathcal{N}}
+\newcommand{\spc}{\hspace{0.8cm}}   % Espaçamento
+$$
+:::
+
+# Teoria: Wavelet Shrinkage
+Considere o problema de estimar a função desconhecida $f$, cujo modelo não paramétrico no formato vetorial é dado por:
+$$\boldsymbol{y} = \boldsymbol{f} + \boldsymbol{e}$$
+onde $\boldsymbol{y} = (y_1, \dots, y_n)'$ é o vetor de valores observados, $\boldsymbol{f} = (f(x_1), \dots, f(x_n))'$ é a função verdadeira e $\boldsymbol{e} = (e_1, \dots, e_n)'$ é o erro onde $e_i$, $i=1,\dots,n$, são variáveis aleatórias independentes e identicamente distribuídas (*i.i.d.*) com distribuição normal, média $0$ e variância $\sigma^2$, desconhecida. Tem-se por objetivo estimar a função $f$ e, para isso, é aplicado a DWT, representada por sua matriz $W$, de forma que:
+$$\boldsymbol{d}^* = \boldsymbol{d} + \boldsymbol{\varepsilon}$$
+com $\boldsymbol{d}^* = W \boldsymbol{y}$, $\boldsymbol{d} = W \boldsymbol{f}$ e $\boldsymbol{\varepsilon} = (\varepsilon_1,\dots, \varepsilon_n)' = W \boldsymbol{e}$. Além disso, as propriedades do erro $e_i$ são mantidas, logo, $\varepsilon_i \overset{i.i.d.}{\sim} \norm(0, \sigma^2)$, $i=1,\dots,n$. Portanto, o problema de estimar $f$ foi substituído por estimar os coeficientes de ondaletas $\boldsymbol d$ utilizando os coeficientes de ondaletas empíricos $\boldsymbol{d}^*$. A ideia do método consiste em utilizar a propriedade de *esparsidade* dos coeficientes de ondaletas, já que os coeficientes nulos estão associados à parte suave da função e os coeficientes não nulos associam-se às principais características da função, como descontinuidades, mudanças de comportamento, picos, entre outras. Logo, tem-se por objetivo encolher (ou zerar) os coeficientes de forma a reduzir o ruído aleatório $\varepsilon$. Para isso, é necessário escolher uma proposta para determinar o limiar $\lambda$.
+
+## Universal Threshold
+A proposta deste método para o cálculo do limiar é dada por
+$$\lambda_u = \sigma\sqrt{2 \ln(n)}$$
+onde $\sigma$ é estimado pelo MAD (*median absolute deviation*) dos coeficientes empíricos presentes na escala mais fina. Esse limiar leva a estimadores que subestimam $f$, já que apresenta uma tendência de aplicar o encolhimento em muitos coeficientes, principalmente em níveis de resolução mais finos.
+
+
+## SURE Threshold
+Este método utiliza como critério para a escolha do limiar $\lambda$ o valor que minimiza um estimador não viesado do risco de Stein (*Stein unbiased risk estimator*) $SURE(\lambda; \mathbf{y})$, dado por
+$$SURE(\lambda; \mathbf{y}) = n - 2\#\{i:|y_i| \leq \lambda\} + \sum_{i}(\min\{|y_i|, \lambda\})^2$$
+Além disso, vale notar que este método não funciona bem quando os coeficientes do sinal verdadeiro são muito esparsos.
+
+
+## Validação Cruzada (CV)
+O método de validação cruzada consiste em utilizar uma parcela dos dados para ajustar o modelo, enquanto que a parte restante é utilizada para avaliar sua adequação com o objetivo de estimar $f$. No caso das ondaletas a DWT precisa ser aplicada em um vetor diádico, portanto, faz-se necessária a utilização de um vetor com $2^J$ elementos. Logo, é utilizado metade das observações para ajuste do modelo e a outra metade na sua validação. O algorítimo do processo é dado por:
+
+  1. Remover as observações $y_i$ com subíndice ímpar do conjunto de dados, logo, tem-se $2^{J-1}$ observações, as quais devem ser reindexadas para $k=1, \dots, 2^{J-1}$;
+    
+  2. Estimar a função $f$ por meio de $\hat f^{par}_\lambda$, utilizando um limiar particular $\lambda$ advindo dos dados reindexados;
+
+  3. Utilizar os dados retirados com subíndice ímpar para formar uma versão interpolada dos dados ímpares, dada por
+    $$\bar{y}_k^{impar} = \begin{cases}
+        (y_{2k - 1} + y_{2k + 1})/2 &,\; k=1,\dots, \frac{n}{2}-1\\
+        (y_1 + y_{n-1})/2 &,\; k=\frac{n}{2}
+    \end{cases}$$
+
+  4. De forma similar, deve-se obter $\hat f_\lambda^{impar}$ e $\bar y_k^{par}$ e calcular a estimativa do erro, dada por
+    $$\hat M(\lambda) = \sum_k \left[ (\hat f_\lambda^{par}(y_k) - \bar y_k^{impar})^2 + (\hat f_\lambda^{impar}(y_k) - \bar y_k^{par})^2 \right]
+    $$ {#eq-erro}
+
+  5. Repetir o processo para uma faixa de valores de $\lambda$ e escolher o valor que minimize a @eq-erro.
+
+
+## False Discovery Rate (FDR)
+Neste método a escolha do limiar consiste em realizar testes de hipóteses de forma recursiva para cada nível de resolução e para cada coeficiente de ondaletas, testando se o coeficiente é zero (ruído) ou diferente de zero (sinal). O procedimento se dá por:
+
+  1. Calcular o p-valor $p_{jk}$ para cada coeficiente $d_{jk}$, testando $H_0:d_{jk} = 0$ contra $H_1:d_{jk} \neq 0$, isto é,
+  $$p_{jk} = 2 \left( 1 - \Phi\left( \frac{|d^*_{jk}|}{\sigma} \right) \right)$$
+
+  2. Ordenar os p-valores obtidos e reindexá-los com base no seu valor, logo, $p_{(1)} \leq \dots \leq p_{(n)}$;
+
+  3. Seja $q$ o valor que representa o nível determinado para a taxa de coeficientes atribuídos erroneamente como não nulos e $i_0$ o maior $i$ tal que $p_{(i)} \leq \left(\frac{i}{m} \right)q$. Para este $i_0$ calcule o valor do limiar, dado por
+  $$\lambda_{i_0} = \sigma \Phi^{-1} \left( 1 - \frac{p_{i_0}}{2} \right)$$
+
+
+## Proposta Bayesiana sob Priori Logística (Sousa, 2020)
+
+Priori atribuída:
+$$\pi(d) = \alpha \delta_0 + (1 - \alpha) g(d; \tau)$$
+onde $\alpha \in (0,1)$, $\delta_0$ é o delta de Dirac com massa em $0$ e $g(d; \tau)$ é a função densidade de probabilidade logística, dada por:
+$$
+g(d; \tau) = \frac{\exp\left\{-\frac{d}{\tau}\right\}}{\tau \left( 1 + \exp\left\{-\frac{d}{\tau}\right\} \right)^2} \;\ind_\RR(d) \;, \spc \tau > 0
+$$
+
+Regra de encolhimento:
+$$\delta(d) = \frac{(1-\alpha) \int_\RR (\sigma u + d) g(\sigma u + d; \tau) \phi(u) \,du}{\frac{\alpha}{\sigma} \phi\left(\frac{d}{\sigma} \right) + (1-\alpha) \int_\RR g(\sigma u + d; \tau) \phi(u) \, du}$$
+
+*Demonstração.* Considere nesta demonstração, para melhor denotar os termos, que $d=\theta$ e a substituição $u = \frac{\theta - d^*}{\sigma}$. Então,
+\begin{align*}
+    \delta(\theta) &= \E(\theta \mid d^*) = \int_\RR \theta \,\pi(\theta\mid d^*) \,d\theta\\
+    &=\frac{\int_\RR \theta \,\pi(\theta) \LL(\theta\mid d^*) \,d\theta}{\int_\RR \pi(\theta) \LL(\theta\mid d^*) \,d\theta}\\
+    &=\frac{\int_\RR \theta [\alpha \delta_0 + (1 - \alpha) g(\theta; \tau)] \LL(\theta\mid d^*) \,d\theta}{\int_\RR [\alpha \delta_0 + (1 - \alpha) g(\theta; \tau)] \LL(\theta\mid d^*) \,d\theta}\\
+    &=\frac{\alpha\textstyle\int_\RR\theta \, \delta_0(\theta) \LL(\theta\mid d^*) \,d\theta + (1-\alpha) \int_\RR \theta \, g(\theta;\tau) \LL(\theta\mid d^*) \, d\theta}{\alpha \textstyle\int_\RR \delta_0(\theta) \LL(\theta\mid d^*) \, d\theta + (1-\alpha) \int_\RR g(\theta; \tau) \LL(\theta\mid d^*) \, d\theta}\\
+    &=\frac{(1-\alpha) \int_\RR \theta\, g(\theta; \tau) \frac{1}{\sqrt{2\pi}} \exp\left\{ -\frac{1}{2} \left( \frac{d^* - \theta}{\sigma} \right)^2 \right\} \frac{1}{\sigma} \, d\theta}
+    {\frac{\alpha}{\sigma\sqrt{2\pi}}\exp\left\{ -\frac{(d^*-0)^2}{2\sigma^2} \right\} + (1-\alpha) \int_\RR g(\theta; \tau) \frac{1}{\sqrt{2\pi}} \exp\left\{ -\frac{1}{2}\left(\frac{d^* - \theta}{\sigma}\right)^2 \right\} \frac{1}{\sigma} \,d\theta}\\
+    \delta(\theta) &= \frac{(1-\alpha) \int_\RR (\sigma u + d^*) g(\sigma u + d^*; \tau) \phi(u) \,du}{\frac{\alpha}{\sigma} \phi(\frac{d^*}{\sigma}) + (1 - \alpha) \int_\RR g(\sigma u + d^*; \tau) \phi(u) \,du}
+\end{align*}
+
+
+# Simulações
+
+As simulações foram feitas utilizando a Bumps e Doppler considerando 512 e 2048 pontos e a razão sinal-ruído de 3, 5 e 9.
+
+```{r, message=F}
+require(fda.simu)
+
+par(mfrow=c(1,2))
+plot(f_test()$bumps, type='l', main='Bumps')
+plot(f_test()$doppler, type='l', main='Doppler')
+```
+
+
+```{r, eval=F}
+################
+## Simulações ##
+################
+set.seed(282829)
+
+require(future)
+require(wavethresh)
+
+plan(multisession, workers=6)
+
+# funções verdadeiras
+fun_comp_512 <- matrix(c(f_test(n=512)$bumps, f_test(n=512)$doppler), nrow=2, byrow=T)
+fun_comp_2048 <- matrix(c(f_test(n=2048)$bumps, f_test(n=2048)$doppler), nrow=2, byrow=T)
+
+#### snr=3 e n=512 ##############
+simu_3_512_sure <- simu(fun_comp_512, rep=1000, n=15, snr=3, policy='sure')
+simu_3_512_univ <- simu(fun_comp_512, rep=1000, n=15, snr=3, policy='universal')
+simu_3_512_cv <- simu(fun_comp_512, rep=1000, n=15, snr=3, policy='cv')
+simu_3_512_fdr <- simu(fun_comp_512, rep=1000, n=15, snr=3, policy='fdr')
+
+#### snr=5 e n=512 ##############
+simu_5_512_sure <- simu(fun_comp_512, rep=1000, n=15, snr=5, policy='sure')
+simu_5_512_univ <- simu(fun_comp_512, rep=1000, n=15, snr=5, policy='universal')
+simu_5_512_cv <- simu(fun_comp_512, rep=1000, n=15, snr=5, policy='cv')
+simu_5_512_fdr <- simu(fun_comp_512, rep=1000, n=15, snr=5, policy='fdr')
+
+#### snr=9 e n=512 ##############
+simu_9_512_sure <- simu(fun_comp_512, rep=1000, n=15, snr=9, policy='sure')
+simu_9_512_univ <- simu(fun_comp_512, rep=1000, n=15, snr=9, policy='universal')
+simu_9_512_cv <- simu(fun_comp_512, rep=1000, n=15, snr=9, policy='cv')
+simu_9_512_fdr <- simu(fun_comp_512, rep=1000, n=15, snr=9, policy='fdr')
+
+
+#### snr=3 e n=2048 ##############
+simu_3_2048_sure <- simu(fun_comp_2048, rep=1000, n=15, snr=3, policy='sure')
+simu_3_2048_univ <- simu(fun_comp_2048, rep=1000, n=15, snr=3, policy='universal')
+simu_3_2048_cv <- simu(fun_comp_2048, rep=1000, n=15, snr=3, policy='cv')
+simu_3_2048_fdr <- simu(fun_comp_2048, rep=1000, n=15, snr=3, policy='fdr')
+
+#### snr=5 e n=2048 ##############
+simu_5_2048_sure <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='sure')
+simu_5_2048_univ <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='universal')
+simu_5_2048_cv <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='cv')
+simu_5_2048_fdr <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='fdr')
+
+#### snr=9 e n=2048 ##############
+simu_9_2048_sure <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='sure')
+simu_9_2048_univ <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='universal')
+simu_9_2048_cv <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='cv')
+simu_9_2048_fdr <- simu(fun_comp_2048, rep=1000, n=15, snr=5, policy='fdr')
+```
+
+
+<center>**Média (desvio padrão) para o erro da função Bumps**</center>
+|   $MSE_1$ (Bumps)    | sure            |  univ           | CV             | fdr              |
+|:-------------:|:------------:|:------------:|:------------:|:------------:|
+| $n=512$, $snr=3$    | 1.6697 (0.6315) | 1.6372 (0.5966) | 1.6320 (0.6054) | 1.6289 (0.6442) |
+| $n=512$, $snr=5$    | 0.5933 (0.2047) | 0.5834 (0.2062) | 0.5923 (0.2136) | 0.5803 (0.1920) |
+| $n=512$, $snr=9$    | 0.1857 (0.0754) | 0.1834 (0.0651) | 0.1828 (0.0673) | 0.1853 (0.0676) |
+| $n=2048$, $snr=3$   | 1.6701 (0.6283) | 1.6663 (0.6087) | 1.6443 (0.5836) | 1.6405 (0.5491) |
+| $n=2048$, $snr=5$   | 0.6114 (0.2514) | 0.5960 (0.2161) | 0.5872 (0.2067) | 0.5870 (0.2173) |
+| $n=2048$, $snr=9$   | 0.5973 (0.2204) | 0.5877 (0.2082) | 0.5972 (0.2255) | 0.5863 (0.2124) |
+
+<br><br>
+
+
+<center>**Média (desvio padrão) para o erro da função Doppler**</center>
+|   $MSE_2$ (Doppler) | sure            |  univ           | CV              | fdr             |
+|:-------------:|:------------:|:------------:|:------------:|:------------:|
+| $n=512$, $snr=3$   | 1.6302 (0.6121) | 1.6574 (0.5914) | 1.6266 (0.5680) | 1.6714 (0.6250) |
+| $n=512$, $snr=5$   | 0.6016 (0.2114) | 0.5905 (0.2180) | 0.5909 (0.2197) | 0.5939 (0.2102) |
+| $n=512$, $snr=9$   | 0.1817 (0.0692) | 0.1854 (0.0673) | 0.1810 (0.0634) | 0.1819 (0.0687) |
+| $n=2048$, $snr=3$  | 1.6622 (0.5942) | 1.6594 (0.6193) | 1.6319 (0.6058) | 1.6378 (0.6046) |
+| $n=2048$, $snr=5$  | 0.5802 (0.2082) | 0.5972 (0.2204) | 0.6015 (0.2346) | 0.5928 (0.1973) |
+| $n=2048$, $snr=9$  | 0.5935 (0.2217) | 0.5895 (0.2018) | 0.5907 (0.2196) | 0.5949 (0.2302) |
+
+<br><br>
+
+<center>**Média (desvio padrão) para o erro geral**</center>
+|   $AMSE$            |  sure           |  univ           | CV              | fdr             |
+|:-------------:|:------------:|:------------:|:------------:|:------------:|
+| $n=512$, $snr=3$   | 1.6499 (0.4344) | 1.6473 (0.4049) | 1.6293 (0.4012) | 1.6501 (0.4419) |
+| $n=512$, $snr=5$   | 0.5975 (0.1402) | 0.5869 (0.1426) | 0.5916 (0.1469) | 0.5871 (0.1388) |
+| $n=512$, $snr=9$   | 0.1837 (0.0495) | 0.1844 (0.0454) | 0.1819 (0.0441) | 0.1836 (0.0464) |
+| $n=2048$, $snr=3$  | 1.6662 (0.4183) | 1.6628 (0.4060) | 1.6381 (0.4026) | 1.6392 (0.3888) |
+| $n=2048$, $snr=5$  | 0.5958 (0.1603) | 0.5966 (0.1461) | 0.5943 (0.1502) | 0.5899 (0.1414) |
+| $n=2048$, $snr=9$  | 0.5954 (0.1479) | 0.5886 (0.1412) | 0.594 (0.153)   | 0.5906 (0.1497) |
+
+<br><br>
+
+
+```{r, message=F, warning=F}
+require(ggplot2)
+require(magrittr)
+require(patchwork)
+
+load('simulacoes.RData')
+
+# sapply(simu_9_2048_fdr, function(x) round(c('Média'=mean(x), 'SD'= sd(x)), 4))
+#
+# dados <- list(simu_3_512_sure, simu_3_512_univ, simu_3_512_cv, simu_3_512_fdr,
+#               simu_5_512_sure, simu_5_512_univ, simu_5_512_cv, simu_5_512_fdr,
+#               simu_9_512_sure, simu_9_512_univ, simu_9_512_cv, simu_9_512_fdr,
+#               simu_3_2048_sure, simu_3_2048_univ, simu_3_2048_cv,
+#               simu_3_2048_fdr, simu_5_2048_sure, simu_5_2048_univ,
+#               simu_5_2048_cv, simu_5_2048_fdr, simu_9_2048_sure,
+#               simu_9_2048_univ, simu_9_2048_cv, simu_9_2048_fdr
+# )
+# 
+# names(dados) <- c('simu_3_512_sure', 'simu_3_512_univ', 'simu_3_512_cv',
+#                   'simu_3_512_fdr', 'simu_5_512_sure', 'simu_5_512_univ',
+#                   'simu_5_512_cv', 'simu_5_512_fdr', 'simu_9_512_sure',
+#                   'simu_9_512_univ', 'simu_9_512_cv', 'simu_9_512_fdr',
+#                   'simu_3_2048_sure', 'simu_3_2048_univ', 'simu_3_2048_cv',
+#                   'simu_3_2048_fdr', 'simu_5_2048_sure', 'simu_5_2048_univ',
+#                   'simu_5_2048_cv', 'simu_5_2048_fdr', 'simu_9_2048_sure',
+#                   'simu_9_2048_univ', 'simu_9_2048_cv', 'simu_9_2048_fdr')
+
+
+# tema geral para os gráficos
+tema <- theme_bw() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        plot.title = element_text(hjust=0.5))
+
+# gráficos
+sure <- rbind(simu_3_512_sure, simu_5_512_sure, simu_9_512_sure,
+              simu_3_2048_sure, simu_5_2048_sure, simu_9_2048_sure)
+sure$snr <- factor(rep(c(3, 5, 9), 2, each=1000))
+sure$n <- rep(c(512, 2048), each=3000)
+
+(sure %>%
+  ggplot(aes(y=MSE_1, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Bumps (MSE_1)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+sure %>%
+  ggplot(aes(y=MSE_2, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Doppler (MSE_2)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+sure %>%
+  ggplot(aes(y=AMSE, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='AMSE', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  tema
+) +
+  plot_annotation(title='SURE',
+    theme=theme(plot.title = element_text(hjust=0.5, size=21)))
+
+
+
+univ <- rbind(simu_3_512_univ, simu_5_512_univ, simu_9_512_univ,
+              simu_3_2048_univ, simu_5_2048_univ, simu_9_2048_univ)
+univ$snr <- factor(rep(c(3, 5, 9), 2, each=1000))
+univ$n <- rep(c(512, 2048), each=3000)
+
+(univ %>%
+  ggplot(aes(y=MSE_1, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Bumps (MSE_1)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+univ %>%
+  ggplot(aes(y=MSE_2, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Doppler (MSE_2)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+univ %>%
+  ggplot(aes(y=AMSE, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='AMSE', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  tema
+) +
+  plot_annotation(title='Universal',
+    theme=theme(plot.title = element_text(hjust=0.5, size=21)))
+
+
+
+cv <- rbind(simu_3_512_cv, simu_5_512_cv, simu_9_512_cv,
+              simu_3_2048_cv, simu_5_2048_cv, simu_9_2048_cv)
+cv$snr <- factor(rep(c(3, 5, 9), 2, each=1000))
+cv$n <- rep(c(512, 2048), each=3000)
+
+(cv %>%
+  ggplot(aes(y=MSE_1, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Bumps (MSE_1)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+cv %>%
+  ggplot(aes(y=MSE_2, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Doppler (MSE_2)', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  guides(fill='none') +
+  tema
+) + (
+cv %>%
+  ggplot(aes(y=AMSE, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='AMSE', y=NULL) +
+  scale_y_continuous(limits=c(0,9)) +
+  tema
+) +
+  plot_annotation(title='CV',
+    theme=theme(plot.title = element_text(hjust=0.5, size=21)))
+
+
+
+fdr <- rbind(simu_3_512_fdr, simu_5_512_fdr, simu_9_512_fdr,
+              simu_3_2048_fdr, simu_5_2048_fdr, simu_9_2048_fdr)
+fdr$snr <- factor(rep(c(3, 5, 9), 2, each=1000))
+fdr$n <- rep(c(512, 2048), each=3000)
+
+(fdr %>%
+  ggplot(aes(y=MSE_1, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Bumps (MSE_1)', y=NULL) +
+  scale_y_continuous(limits=c(0,10.2)) +
+  guides(fill='none') +
+  tema
+) + (
+fdr %>%
+  ggplot(aes(y=MSE_2, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='Doppler (MSE_2)', y=NULL) +
+  scale_y_continuous(limits=c(0,10.2)) +
+  guides(fill='none') +
+  tema
+) + (
+fdr %>%
+  ggplot(aes(y=AMSE, fill=snr)) +
+  geom_boxplot() +
+  facet_grid(~ n) +
+  labs(title='AMSE', y=NULL) +
+  scale_y_continuous(limits=c(0,10.2)) +
+  tema
+) +
+  plot_annotation(title='FDR',
+    theme=theme(plot.title = element_text(hjust=0.5, size=21)))
+
+```
+
+
+# Referências
+
+::: {#refs}
+- Nason, G.P. (2008). *Wavelet Methods in Statistics with R*. Springer.
+
+- Sousa, A.R.S. (2020). Bayesian wavelet shrinkage with logistic prior. *Communications in Statistics - Simulation and Computation*, DOI: 10.1080/03610918.2020.1747076.
+:::
+
+
+# Funções do Pacote Utilizadas
+```{r, echo=F}
+require(fda.simu)
+
+cat('------ simu', paste(rep('-', 30), collapse=''),'\n\n')
+simu
+
+cat('------ logis_shrink', paste(rep('-', 30), collapse=''),'\n\n')
+logis_shrink
+
+cat('------ f_test', paste(rep('-', 30), collapse=''),'\n\n')
+f_test
+```
+
+
+
+
