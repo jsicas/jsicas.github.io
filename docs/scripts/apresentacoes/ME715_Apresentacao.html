@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="João Victor Siqueira Rodrigues, 236153  Vinícius Prado Moreira Silva, 195079  Henrique de Souza e Silva, 169595  Rodrigo Caldiron, 185416">
+
+<title>jsicas.github.io - Modelo SUR</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jsicas.github.io</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Procurar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Alternar de navegação" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Alternar modo escuro"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#modelo-sur" id="toc-modelo-sur" class="nav-link active" data-scroll-target="#modelo-sur">Modelo SUR</a>
+  <ul class="collapse">
+  <li><a href="#motivação" id="toc-motivação" class="nav-link" data-scroll-target="#motivação">Motivação</a></li>
+  <li><a href="#modelo-sur-1" id="toc-modelo-sur-1" class="nav-link" data-scroll-target="#modelo-sur-1">Modelo SUR</a></li>
+  <li><a href="#modelo-sur-2" id="toc-modelo-sur-2" class="nav-link" data-scroll-target="#modelo-sur-2">Modelo SUR</a></li>
+  <li><a href="#suposições" id="toc-suposições" class="nav-link" data-scroll-target="#suposições">Suposições</a></li>
+  <li><a href="#suposições-1" id="toc-suposições-1" class="nav-link" data-scroll-target="#suposições-1">Suposições</a></li>
+  <li><a href="#vantagens-e-desvantagens" id="toc-vantagens-e-desvantagens" class="nav-link" data-scroll-target="#vantagens-e-desvantagens">Vantagens e Desvantagens</a></li>
+  </ul></li>
+  <li><a href="#estimação" id="toc-estimação" class="nav-link" data-scroll-target="#estimação">Estimação</a>
+  <ul class="collapse">
+  <li><a href="#produto-de-kronecker" id="toc-produto-de-kronecker" class="nav-link" data-scroll-target="#produto-de-kronecker">Produto de Kronecker</a></li>
+  <li><a href="#estimação-1" id="toc-estimação-1" class="nav-link" data-scroll-target="#estimação-1">Estimação</a></li>
+  <li><a href="#mqg" id="toc-mqg" class="nav-link" data-scroll-target="#mqg">MQG</a></li>
+  <li><a href="#por-que-não-mqo" id="toc-por-que-não-mqo" class="nav-link" data-scroll-target="#por-que-não-mqo">Por que não MQO?</a></li>
+  <li><a href="#mqgf" id="toc-mqgf" class="nav-link" data-scroll-target="#mqgf">MQGF</a></li>
+  <li><a href="#simulação" id="toc-simulação" class="nav-link" data-scroll-target="#simulação">Simulação</a></li>
+  <li><a href="#simulação-1" id="toc-simulação-1" class="nav-link" data-scroll-target="#simulação-1">Simulação</a></li>
+  </ul></li>
+  <li><a href="#artigo" id="toc-artigo" class="nav-link" data-scroll-target="#artigo">Artigo</a>
+  <ul class="collapse">
+  <li><a href="#contexto" id="toc-contexto" class="nav-link" data-scroll-target="#contexto">Contexto</a></li>
+  <li><a href="#modelo" id="toc-modelo" class="nav-link" data-scroll-target="#modelo">Modelo</a></li>
+  <li><a href="#modelo-1" id="toc-modelo-1" class="nav-link" data-scroll-target="#modelo-1">Modelo</a></li>
+  <li><a href="#modelo-2" id="toc-modelo-2" class="nav-link" data-scroll-target="#modelo-2">Modelo</a></li>
+  <li><a href="#estimação-2" id="toc-estimação-2" class="nav-link" data-scroll-target="#estimação-2">Estimação</a></li>
+  </ul></li>
+  <li><a href="#aplicação-1" id="toc-aplicação-1" class="nav-link" data-scroll-target="#aplicação-1">Aplicação 1</a>
+  <ul class="collapse">
+  <li><a href="#conjunto-de-dados" id="toc-conjunto-de-dados" class="nav-link" data-scroll-target="#conjunto-de-dados">Conjunto de Dados</a></li>
+  <li><a href="#spc" id="toc-spc" class="nav-link" data-scroll-target="#spc">spc</a></li>
+  <li><a href="#spc-1" id="toc-spc-1" class="nav-link" data-scroll-target="#spc-1">spc</a></li>
+  <li><a href="#spc-2" id="toc-spc-2" class="nav-link" data-scroll-target="#spc-2">spc</a></li>
+  <li><a href="#spc-3" id="toc-spc-3" class="nav-link" data-scroll-target="#spc-3">spc</a></li>
+  <li><a href="#spc-4" id="toc-spc-4" class="nav-link" data-scroll-target="#spc-4">spc</a></li>
+  <li><a href="#intervalos-de-confiança-para-os-betas-da-primeira-equação" id="toc-intervalos-de-confiança-para-os-betas-da-primeira-equação" class="nav-link" data-scroll-target="#intervalos-de-confiança-para-os-betas-da-primeira-equação">Intervalos de confiança para os betas da primeira equação</a></li>
+  <li><a href="#intervalos-de-confiança-para-os-betas-da-segunda-equação" id="toc-intervalos-de-confiança-para-os-betas-da-segunda-equação" class="nav-link" data-scroll-target="#intervalos-de-confiança-para-os-betas-da-segunda-equação">Intervalos de confiança para os betas da segunda equação</a></li>
+  <li><a href="#intervalos-de-confiança-para-rho" id="toc-intervalos-de-confiança-para-rho" class="nav-link" data-scroll-target="#intervalos-de-confiança-para-rho">Intervalos de confiança para <span class="math inline">\(\rho\)</span></a></li>
+  <li><a href="#spc-5" id="toc-spc-5" class="nav-link" data-scroll-target="#spc-5">spc</a></li>
+  <li><a href="#spc-6" id="toc-spc-6" class="nav-link" data-scroll-target="#spc-6">spc</a></li>
+  <li><a href="#spc-7" id="toc-spc-7" class="nav-link" data-scroll-target="#spc-7">spc</a></li>
+  <li><a href="#verificando-normalidade-dos-resíduos" id="toc-verificando-normalidade-dos-resíduos" class="nav-link" data-scroll-target="#verificando-normalidade-dos-resíduos">Verificando normalidade dos resíduos</a></li>
+  <li><a href="#verificando-normalidade-dos-resíduos-1" id="toc-verificando-normalidade-dos-resíduos-1" class="nav-link" data-scroll-target="#verificando-normalidade-dos-resíduos-1">Verificando normalidade dos resíduos</a></li>
+  </ul></li>
+  <li><a href="#aplicação-2" id="toc-aplicação-2" class="nav-link" data-scroll-target="#aplicação-2">Aplicação 2</a>
+  <ul class="collapse">
+  <li><a href="#ncovr" id="toc-ncovr" class="nav-link" data-scroll-target="#ncovr">NCOVR</a></li>
+  <li><a href="#distribuição-espacial-das-taxas-de-homicídios-em-1980" id="toc-distribuição-espacial-das-taxas-de-homicídios-em-1980" class="nav-link" data-scroll-target="#distribuição-espacial-das-taxas-de-homicídios-em-1980">Distribuição espacial das taxas de homicídios em <span class="math inline">\(1980\)</span></a></li>
+  </ul></li>
+  <li><a href="#aplicação-3" id="toc-aplicação-3" class="nav-link" data-scroll-target="#aplicação-3">Aplicação 3</a>
+  <ul class="collapse">
+  <li><a href="#simulação-2" id="toc-simulação-2" class="nav-link" data-scroll-target="#simulação-2">Simulação</a></li>
+  <li><a href="#modelo-errado---sim" id="toc-modelo-errado---sim" class="nav-link" data-scroll-target="#modelo-errado---sim">Modelo Errado - SIM</a></li>
+  <li><a href="#modelo-certo---slm" id="toc-modelo-certo---slm" class="nav-link" data-scroll-target="#modelo-certo---slm">Modelo Certo - SLM</a></li>
+  <li><a href="#modelo-certo" id="toc-modelo-certo" class="nav-link" data-scroll-target="#modelo-certo">Modelo Certo</a></li>
+  </ul></li>
+  <li><a href="#críticas" id="toc-críticas" class="nav-link" data-scroll-target="#críticas">Críticas</a></li>
+  <li><a href="#muito-obrigado" id="toc-muito-obrigado" class="nav-link" data-scroll-target="#muito-obrigado">Muito Obrigado!</a></li>
+  <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Outros formatos</h2><ul><li><a href="ME715_Apresentacao.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Modelo SUR</h1>
+<p class="subtitle lead">Trabalho - ME715</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Autor</div>
+  <div class="quarto-title-meta-heading">Afiliação</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">João Victor Siqueira Rodrigues, 236153<br> Vinícius Prado Moreira Silva, 195079<br> Henrique de Souza e Silva, 169595<br> Rodrigo Caldiron, 185416 </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <br>Instituto de Matemática, Estatística e Computação Científica (IMECC)<br>Universidade Estadual de Campinas (UNICAMP)
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="modelo-sur" class="level1">
+<h1>Modelo SUR</h1>
+<div class="hidden">
+<p><span class="math display">\[
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\posto}{posto}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\p}{\mathbb{P}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\bm}[1]{\mathbf{#1}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\bu}{\bullet}
+\newcommand{\norm}{\mathcal{N}}
+\newcommand{\spc}{\hspace{0.8cm}}   % Espaçamento
+\]</span></p>
+</div>
+<section id="motivação" class="level2">
+<h2 class="anchored" data-anchor-id="motivação">Motivação</h2>
+<ul>
+<li>O que é o Modelo SUR?</li>
+<li>Por que utilizar o Modelo SUR?</li>
+<li>Como estimar o Modelo SUR?</li>
+<li>Modelo SUR ou MQO? Quais as vantagens e desvantagens?</li>
+</ul>
+</section>
+<section id="modelo-sur-1" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-sur-1">Modelo SUR</h2>
+<p>Os modelos de regressões lineares aparentemente não correlacionados ou modelo SUR (<em>Seemingly Unrelated Regression</em>) é um modelo multivariado, isto é, busca explicar múltiplas variáveis dependentes. Além disso, pode ser definido através de <span class="math inline">\(g\)</span> modelos lineares indexados por <span class="math inline">\(i\)</span>, dados por:</p>
+<p><span class="math display">\[\begin{equation}\tag{1}\label{eq: modelo sur}
+\bs y_i = \bs X_i \bs\beta_i + \bs u_i \;, \spc i=1,\dots,g
+\end{equation}\]</span></p>
+<p>onde</p>
+<ul>
+<li><span class="math inline">\(\bs y_i\)</span> denota o vetor de tamanho <span class="math inline">\(n\)</span> da <span class="math inline">\(i\)</span>-ésima variável dependente;</li>
+<li><span class="math inline">\(\bs X_i\)</span> denota a matriz de dimensão <span class="math inline">\(n \times k_i\)</span> de regressores da <span class="math inline">\(i\)</span>-ésima equação;</li>
+<li><span class="math inline">\(\bs\beta_i\)</span> denota o vetor <span class="math inline">\(k_i\)</span>-dimensional de parâmetros;</li>
+<li><span class="math inline">\(\bs u_i\)</span> denota o vetor de erros de tamanho <span class="math inline">\(n\)</span>.</li>
+</ul>
+</section>
+<section id="modelo-sur-2" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-sur-2">Modelo SUR</h2>
+<p>O modelo SUR pode ser escrito da seguinte forma:</p>
+<p><span class="math display">\[\bs y_\bu = \bs X_\bu \bs\beta_\bu + \bs u_\bu\]</span></p>
+<p><span class="math display">\[
+  \begin{bmatrix}
+      \bs y_1 \\ \bs y_2 \\ \vdots \\ \bs y_g
+  \end{bmatrix} =
+  \begin{bmatrix}
+      \bs X_1 &amp; \bs0    &amp; \dots  &amp; \bs0\\
+      \bs0    &amp; \bs X_2 &amp; \dots  &amp; \bs0\\
+      \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots\\
+      \bs0    &amp; \bs0    &amp; \dots  &amp; \bs X_g\\
+  \end{bmatrix}
+  \begin{bmatrix}
+      \bs\beta_1 \\ \bs\beta_2 \\ \vdots \\ \bs\beta_g
+  \end{bmatrix} +
+  \begin{bmatrix}
+      \bs u_1 \\ \bs u_2 \\ \vdots \\ \bs u_g
+  \end{bmatrix}
+\]</span></p>
+<p>onde,</p>
+<ul>
+<li><span class="math inline">\(\bs y_\bu\)</span> é um vetor de tamanho <span class="math inline">\(ng\)</span> com os vetores <span class="math inline">\(\bs y_1, \dots, \bs y_g\)</span> empilhados;</li>
+<li><span class="math inline">\(\bs X_\bu\)</span> é uma matriz diagonal com blocos <span class="math inline">\(\bs X_1, \dots, \bs X_g\)</span>;</li>
+<li><span class="math inline">\(\bs\beta_\bu\)</span> contém os vetores <span class="math inline">\(\bs\beta_1, \dots, \bs\beta_g\)</span> empilhados;</li>
+<li><span class="math inline">\(\bs u_\bu\)</span> é um vetor de tamanho <span class="math inline">\(ng\)</span> com os vetores <span class="math inline">\(\bs u_1, \dots, \bs u_g\)</span> empilhados.</li>
+</ul>
+</section>
+<section id="suposições" class="level2">
+<h2 class="anchored" data-anchor-id="suposições">Suposições</h2>
+<ul>
+<li><span class="math inline">\(\E(u_i \mid \bs X_i) = 0\)</span>, <span class="math inline">\(\forall i\)</span>, isto é, fracamente exógenos (então, por que não utilizar MQO? 🤔);</li>
+<li><span class="math inline">\(\E(\bs u_i \bs u_i') = \sigma_{ii} I_n\)</span> e <span class="math inline">\(\E(u_{ti}u_{tj}) = \sigma_{ij}\)</span>, ou seja, a variância do erro é constante em cada equação, mas pode variar entre equações;</li>
+<li><span class="math inline">\(\E(u_{ti}u_{sj}) = 0\)</span>, <span class="math inline">\(t \neq s\)</span> e <span class="math inline">\(i \neq j\)</span>.</li>
+</ul>
+<p>. . .</p>
+<p>onde <span class="math inline">\(\sigma_{ij}\)</span> é o elemento <span class="math inline">\((ij)\)</span> da matriz <span class="math inline">\(\Sigma_{g \times g} &gt; 0\)</span>, denominada de matriz de covariância contemporânea.</p>
+<p>. . .</p>
+<p><br> Portanto, fica definido o modelo SUR por meio das <span class="math inline">\(g\)</span> equações em <span class="math inline">\(\eqref{eq: modelo sur}\)</span> e das suposições apresentadas.</p>
+</section>
+<section id="suposições-1" class="level2">
+<h2 class="anchored" data-anchor-id="suposições-1">Suposições</h2>
+<div class="center-text">
+<p><span style="color:red;"><strong>Correlação contemporânea?</strong></span></p>
+</div>
+<center>
+<img src="figuras/pulp_fiction.gif" class="img-fluid" style="width:25.0%">
+</center>
+<p>. . .</p>
+<p>A correlação contemporânea é quando existe correlação entre os erros dos diferentes modelos para um mesmo indivíduo. Seu surgimento é devido à omissão de variáveis, já que as informações presentes nas preditoras que explicam a variável resposta (mas não entram no modelo) passam a fazer parte do erro.</p>
+</section>
+<section id="vantagens-e-desvantagens" class="level2">
+<h2 class="anchored" data-anchor-id="vantagens-e-desvantagens">Vantagens e Desvantagens</h2>
+<ul>
+<li><p><strong>Vantagem:</strong> Com a adaptação feita, o modelo passa a considerar a correlação presente no erro, aumentando sua precisão.</p></li>
+<li><p><strong>Desvantagem:</strong> Quando o número de indivíduos é muito grande, o número de parâmetros a ser estimado também será, podendo levar à estimativas pouco fidedignas do modelo.</p></li>
+</ul>
+</section>
+</section>
+<section id="estimação" class="level1">
+<h1>Estimação</h1>
+<section id="produto-de-kronecker" class="level2">
+<h2 class="anchored" data-anchor-id="produto-de-kronecker">Produto de Kronecker</h2>
+<p>Seja <span class="math inline">\(A\)</span> uma matriz <span class="math inline">\(p \times q\)</span> e <span class="math inline">\(B\)</span> uma matriz <span class="math inline">\(r \times s\)</span>. Então, o produto de Kronecker, denotado por <span class="math inline">\(\otimes\)</span>, entre <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> é dado por: <span class="math display">\[
+A \otimes B = \begin{bmatrix}
+  a_{11} B &amp; \dots  &amp; a_{1q}B\\
+  \vdots   &amp; \ddots &amp; \vdots\\
+  a_{p1} B &amp; \dots  &amp; a_{pq}B\\
+\end{bmatrix}
+\]</span></p>
+<p><strong>Propriedades:</strong></p>
+<ul>
+<li><span class="math inline">\((A \otimes B)' = A' \otimes B'\)</span></li>
+<li><span class="math inline">\((A \otimes B)(C \otimes D) = (AC) \otimes (BD)\)</span></li>
+<li><span class="math inline">\((A \otimes B)^{-1} = A^{-1} \otimes B^{-1}\)</span></li>
+</ul>
+</section>
+<section id="estimação-1" class="level2">
+<h2 class="anchored" data-anchor-id="estimação-1">Estimação</h2>
+<p>O estimador de MQO para o modelo SUR é dado por: <span class="math display">\[\bs{\hat\beta}_{\bu}^{MQO} = (\bs X_\bu'\bs X_\bu)^{-1}\bs X_\bu' \bs y_\bu\]</span></p>
+<p>. . .</p>
+<p>Além disso,</p>
+<p><span class="math display">\[
+\E(\bs u_\bu \bs u_\bu') =
+\begin{bmatrix}
+  \E(\bs u_1 \bs u_1') &amp; \cdots  &amp; \E(\bs u_1 \bs u_g')\\
+  \vdots               &amp; \ddots &amp; \vdots\\
+  \E(\bs u_g \bs u_1')         &amp; \cdots  &amp; \E(\bs u_g \bs u_g')
+\end{bmatrix} =
+\begin{bmatrix}
+  \sigma_{11} I_n &amp; \cdots &amp; \sigma_{1g} I_n\\
+  \vdots          &amp; \ddots &amp; \vdots\\
+  \sigma_{g1} I_n &amp; \cdots &amp; \sigma_{gg} I_n
+\end{bmatrix} = \bs\Sigma_\bu
+\]</span> mas <span class="math inline">\(\bs\Sigma_\bu = \Sigma \otimes I_n \neq \sigma I\)</span>.</p>
+<p>. . .</p>
+<p><br></p>
+<p>Portanto, o estimador por MQO não é BLUE 😔.</p>
+</section>
+<section id="mqg" class="level2">
+<h2 class="anchored" data-anchor-id="mqg">MQG</h2>
+<p>Para o caso de <span class="math inline">\(\Sigma\)</span> conhecida, pode-se utilizar MQG, então</p>
+<p><br></p>
+<p><span class="math display">\[\bs{\hat\beta}_\bu^{MQG} = (\bs X_\bu' (\Sigma^{-1} \otimes I_n) \bs X_\bu)^{-1} \bs X_\bu' (\Sigma^{-1} \otimes I_n) \bs y_\bu\]</span></p>
+<p><span class="math display">\[\V(\bs{\hat\beta}_\bu^{MQG} \mid \bs X) = (\bs X_\bu' (\Sigma^{-1} \otimes I_n) \bs X_\bu)^{-1} =
+\begin{bmatrix}
+    \sigma_{11} \bs X_1' \bs X_1 &amp; \cdots &amp; \sigma_{ig} \bs X_1' \bs X_g\\
+    \vdots &amp; \ddots &amp; \vdots\\
+    \sigma_{g1} \bs X_g' \bs X_1 &amp; \cdots &amp; \sigma_{gg} \bs X_g' \bs X_g
+\end{bmatrix}^{-1}\]</span></p>
+</section>
+<section id="por-que-não-mqo" class="level2">
+<h2 class="anchored" data-anchor-id="por-que-não-mqo">Por que não MQO?</h2>
+<ul>
+<li>Se <span class="math inline">\(\sigma_{ij} = 0\)</span>, <span class="math inline">\(\forall i \neq j\)</span>, então não há ganhos em aplicar outro método que não seja MQO;</li>
+<li>Se <span class="math inline">\(\bs X_i = \bs X_j\)</span>, <span class="math inline">\(\forall i,j\)</span>, então MQO e MQG são iguais;</li>
+<li>Quanto maior a correlação entre <span class="math inline">\(u_{ti}\)</span> e <span class="math inline">\(u_{tj}\)</span>, então maior a eficiência de MQG sobre MQO;</li>
+<li>Quanto menor for a correlação entre <span class="math inline">\(\bs X_i\)</span> e <span class="math inline">\(\bs X_j\)</span>, <span class="math inline">\(i \neq j\)</span> maior serão os ganhos em utilizar MQG do que MQO.</li>
+</ul>
+</section>
+<section id="mqgf" class="level2">
+<h2 class="anchored" data-anchor-id="mqgf">MQGF</h2>
+<p>Contudo, no geral, <span class="math inline">\(\Sigma\)</span> não é conhecida. Então, por MQGF:</p>
+<p>. . .</p>
+<p><span class="math display">\[\hat\Sigma = \frac{1}{n} \bm{\hat U}'\bm{\hat U}\]</span> onde <span class="math inline">\(\bm{\hat U} = \begin{bmatrix} \bs u_1 &amp; \cdots &amp; \bs u_g \end{bmatrix}\)</span>, isto é, uma matriz <span class="math inline">\(n \times g\)</span> cujas colunas são os vetores de resíduo <span class="math inline">\(\bs{\hat u}_i\)</span> da <span class="math inline">\(i\)</span>-ésima equação, obtidos por MQO. Além disso, utilizar <span class="math inline">\(n\)</span> produz um estimador viesado, então, se <span class="math inline">\(k_i = k_j = k\)</span>, <span class="math inline">\(\forall i\neq j\)</span>, pode ser utilizado <span class="math inline">\(n-k\)</span> para obter um estimador não viesado para os elementos da diagonal de <span class="math inline">\(\hat\Sigma\)</span>.</p>
+<p>. . .</p>
+<p><span class="math display">\[\bs{\hat\beta}_\bu^{MQGF} = (\bs X_\bu' (\hat\Sigma^{-1} \otimes I_n) \bs X_\bu)^{-1} \bs X_\bu' (\hat\Sigma^{-1} \otimes I_n)\bs y_\bu\]</span></p>
+<p><span class="math display">\[\V(\bs{\hat\beta}^{MQGF} \mid \bs X) = (\bs X_\bu' (\hat\Sigma^{-1} \otimes I_n) \bs X_\bu)^{-1}\]</span></p>
+<p>. . .</p>
+<p>Ademais, substituir <span class="math inline">\(\Sigma\)</span> por <span class="math inline">\(\hat\Sigma\)</span> afeta as propriedades de MQG, principalmente quando <span class="math inline">\(n\)</span> é pequeno e <span class="math inline">\(g\)</span> é grande.</p>
+</section>
+<section id="simulação" class="level2">
+<h2 class="anchored" data-anchor-id="simulação">Simulação</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">282829</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(MASS)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(systemfit)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(furrr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># parametros</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">3</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">12</span>), <span class="dv">4</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>eq1 <span class="ot">&lt;-</span> y1 <span class="sc">~</span> x1 <span class="sc">+</span> x2  <span class="co"># equação 1</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>eq2 <span class="ot">&lt;-</span> y2 <span class="sc">~</span> x2 <span class="sc">+</span> x3  <span class="co"># equação 2</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">'multisession'</span>, <span class="at">workers =</span> <span class="dv">5</span>)  <span class="co"># paralelização</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> <span class="fu">future_map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3000</span>, <span class="sc">~</span>{</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gerando amostra</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  pop <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">30</span>, mu, sigma)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  erro <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">30</span>, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">37</span>, <span class="dv">37</span>, <span class="dv">45</span>), <span class="dv">2</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  db <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">y1 =</span> <span class="dv">1</span><span class="sc">*</span>pop[,<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>pop[,<span class="dv">2</span>] <span class="sc">+</span> pop[,<span class="dv">4</span>] <span class="sc">+</span> erro[,<span class="dv">1</span>],</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y2 =</span> <span class="dv">3</span><span class="sc">*</span>pop[,<span class="dv">2</span>] <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>pop[,<span class="dv">3</span>] <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>pop[,<span class="dv">4</span>] <span class="sc">+</span> erro[,<span class="dv">2</span>],</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x1 =</span> pop[,<span class="dv">1</span>], <span class="at">x2 =</span> pop[,<span class="dv">2</span>], <span class="at">x3 =</span> pop[,<span class="dv">3</span>]</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ajustando modelos</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  fit_SUR <span class="ot">&lt;-</span> <span class="fu">systemfit</span>(<span class="fu">list</span>(<span class="at">mod1 =</span> eq1, <span class="at">mod2 =</span> eq2), <span class="at">method =</span> <span class="st">'SUR'</span>, <span class="at">data =</span> db,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control =</span> <span class="fu">systemfit.control</span>(<span class="at">methodResidCov =</span> <span class="st">'noDfCor'</span>))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  fit_MQO <span class="ot">&lt;-</span> <span class="fu">systemfit</span>(<span class="fu">list</span>(<span class="at">mod1 =</span> eq1, <span class="at">mod2 =</span> eq2), <span class="at">data =</span> db)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># resultados</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">coef</span>(fit_MQO)[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)], <span class="fu">coef</span>(fit_SUR)[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)])</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>}, <span class="at">.options=</span><span class="fu">furrr_options</span>(<span class="at">seed=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind, <span class="at">args=</span>_)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(betas) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'MQO1_x1'</span>, <span class="st">'MQO1_x2'</span>, <span class="st">'MQO2_x2'</span>, <span class="st">'MQO2_x3'</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'SUR1_x1'</span>, <span class="st">'SUR1_x2'</span>, <span class="st">'SUR2_x2'</span>, <span class="st">'SUR2_x3'</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="center-text">
+<p><strong>Tabela 1:</strong> Modelo 1 - Média (Desvio Padrão)</p>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Tipo</th>
+<th style="text-align: center;"><span class="math inline">\(\beta_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\beta_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">MQO</td>
+<td style="text-align: center;"><span class="math inline">\(1.368\; (0.756)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.299\; (0.534)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">SUR</td>
+<td style="text-align: center;"><span class="math inline">\(0.982\; (0.402)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2.394\; (0.502)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<div class="center-text">
+<p><strong>Tabela 2:</strong> Modelo 2 - Média (Desvio Padrão)</p>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Tipo</th>
+<th style="text-align: center;"><span class="math inline">\(\beta_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\beta_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">MQO</td>
+<td style="text-align: center;"><span class="math inline">\(3.592\; (0.708)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.482\; (0.643)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">SUR</td>
+<td style="text-align: center;"><span class="math inline">\(3.688\; (0.664)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.230\; (0.337)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="simulação-1" class="level2">
+<h2 class="anchored" data-anchor-id="simulação-1">Simulação</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="artigo" class="level1">
+<h1>Artigo</h1>
+<p>Mínguez, R., López, F.A., &amp; Mur, J. (2022). spsur: An R Package for Dealing with Spatial Seemingly Unrelated Regression Models. <em>Journal of Statistical Software</em>, 104(11), 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">doi: 10.18637/jss.v104.i11</a>.</p>
+<section id="contexto" class="level2">
+<h2 class="anchored" data-anchor-id="contexto">Contexto</h2>
+<p>O SUR espacial é uma técninca que incorpora simultaneamente efeitos espaciais e erros correlacionados entre as equações. Sua primeira menção ocorre em Anselin (<span class="math inline">\(1998\)</span>): “Uma equação para cada período de tempo, a qual é estimada para uma seção transversão de unidades espaciais …”.</p>
+<p>O artigo utilizado para a análise disponibiliza o pacote <em>spsur</em> no R, o qual foi desenvolvido para considerar modelos de multiequações com efeitos espaciais e correlação residual.</p>
+</section>
+<section id="modelo" class="level2">
+<h2 class="anchored" data-anchor-id="modelo">Modelo</h2>
+<p>O modelo geral SUR com dependência temporal SUR-GNM (<em>general nesting model</em>) é dado por:</p>
+<p><span class="math display">\[\tag{2}\label{eq: surs}
+\bs y_t = \rho_t \bs W_t^y \bs y_t + \bs X_t \bs\beta_t + \bs W_t^x \bs X_t^* \bs\theta_t + \bs u_t
+\]</span></p>
+<p>com <span class="math inline">\(\bs u_t = \lambda_t \bs W_t^u \bs  u_t + \bs\varepsilon_t\)</span>, <span class="math inline">\(\E(\bs\varepsilon_t) = 0\)</span> e <span class="math inline">\(\E(\bs\varepsilon_t \bs\varepsilon_s') = \sigma_{ts}I_N\)</span>.</p>
+<p>onde:</p>
+<ul>
+<li><span class="math inline">\(\bs X_t^*\)</span>: é a matriz de regressoras sem o intercepto;</li>
+<li><span class="math inline">\(\bs W_t^y\)</span>, <span class="math inline">\(\bs W_t^x\)</span> e <span class="math inline">\(\bs W_t^u\)</span>: são as matrizes de ponderação, com dimensão <span class="math inline">\(n \times n\)</span>;</li>
+</ul>
+</section>
+<section id="modelo-1" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-1">Modelo</h2>
+<p>Comumente, utiliza-se <span class="math inline">\(\bs W = \bs W_t^y = \bs W_t^x = \bs W_t^u\)</span>. Então, o modelo <span class="math inline">\(\eqref{eq: surs}\)</span> pode ser reescrito como:</p>
+<p><span class="math display">\[\bs A \bs y = \bs X \bs\beta + (I_{g} \otimes \bs W)\bs X^* \bs\theta + \bs u\]</span> com <span class="math inline">\(\bs B \bs u = \bs\varepsilon\)</span>, <span class="math inline">\(\bs\varepsilon \sim \norm(\bs 0, \bs\Omega)\)</span>.</p>
+<p><span class="math inline">\(\bs y = \begin{bmatrix} \bs y_1 \\  \vdots \\ \bs y_g\end{bmatrix}\)</span>, <span class="math inline">\(\bs X = \begin{bmatrix}
+    \bs X_1 &amp; \bs0    &amp; \dots  &amp; \bs0\\
+    \bs0    &amp; \bs X_2 &amp; \dots  &amp; \bs0\\
+    \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots\\
+    \bs0    &amp; \bs0    &amp; \dots  &amp; \bs X_g\\
+\end{bmatrix}\)</span>, <span class="math inline">\(\bs\beta = \begin{bmatrix}\bs\beta_1 \\ \vdots \\ \bs\beta_g\end{bmatrix}\)</span>, <span class="math inline">\(\bs\theta = \begin{bmatrix} \bs\theta_1 \\ \vdots \\ \bs\theta_g \end{bmatrix}\)</span>, <span class="math inline">\(\bs u = \begin{bmatrix} \bs u_1 \\ \vdots \\ \bs u_g\end{bmatrix}\)</span>, <span class="math inline">\(\bs\varepsilon = \begin{bmatrix}\bs\varepsilon_1 \\ \vdots \\ \bs\varepsilon_g \end{bmatrix}\)</span></p>
+</section>
+<section id="modelo-2" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-2">Modelo</h2>
+<p>Veja que o modelo apresentado pode ter vários desdobramentos:</p>
+<ul>
+<li><strong>SUR-SIM</strong>: modelo com independência espacial (SUR aprendido em aula), <span class="math inline">\(\rho_t = \lambda_t =0\)</span>, <span class="math inline">\(\bs\theta_t = \bs 0\)</span>;</li>
+<li>SUR-SLX: modelo com defasagem espacial em <span class="math inline">\(\bs X\)</span>, <span class="math inline">\(\rho_t = \lambda_t = 0\)</span>;</li>
+<li><strong>SUR-SLM</strong>: modelo com defasagem espacial, <span class="math inline">\(\lambda_t = 0\)</span>, <span class="math inline">\(\bs\theta_t = \bs0\)</span>;</li>
+<li>SUR-SEM: modelo com erro espacial, <span class="math inline">\(\rho_t = 0\)</span>, <span class="math inline">\(\bs\theta_t = \bs0\)</span>;</li>
+<li><strong>SUR-SDM</strong>: modelo espacial de Durbin, <span class="math inline">\(\lambda_t = 0\)</span>;</li>
+<li>SUR-SDEM: modelo de erro espacial de Durbin; <span class="math inline">\(\rho_t = 0\)</span>;</li>
+<li>SUR-SARAR: modelo de defasagem espacial com erros autorregressivos, <span class="math inline">\(\bs\theta_t = \bs0\)</span>.</li>
+</ul>
+<p>. . .</p>
+<center>
+<img src="figuras/modelos_aninhados.png" class="img-fluid" style="width:45.0%">
+</center>
+</section>
+<section id="estimação-2" class="level2">
+<h2 class="anchored" data-anchor-id="estimação-2">Estimação</h2>
+<p>É necessário impor que a diagonal de <span class="math inline">\(\bs W\)</span> seja preenchida por <span class="math inline">\(0\)</span>. Então, assumindo que os erros são normalmente distribuidos, basta maximizar a função log-verossimilhança, dada por:</p>
+<p><span class="math display">\[\begin{split}
+l(\bs y; \bs \eta) = - \frac{ng}{2} \ln(2\pi) - \frac{n}{2}\ln|\bs\Sigma| + g \sum_{t=1}^{g} \ln|\bs B_t| + g \sum_{t=1}^{g} \ln|\bs A_t| - \\-\frac{1}{2}(\bs A \bs y - \bs{\bar X}[\bs\beta; \bs\theta]')'\bs B' \bs\Omega^{-1} \bs B(\bs A \bs y - \bs{\bar X}[\bs\beta; \bs\theta]')
+\end{split}\]</span> onde <span class="math inline">\(\bs\eta'=[\bs\beta'; \bs\theta'; \rho_1;\dots;\rho_g; \lambda_1;\dots; \lambda_g; \sigma_{ij}]\)</span>, <span class="math inline">\(\bs\Lambda = diag(\lambda_1, \dots, \lambda_g)\)</span>, <span class="math inline">\(\bs\Gamma = diag(\rho_1,\dots,\rho_g)\)</span>, <span class="math inline">\(\bs{\bar X} = [\bs X; (T_g \otimes \bs W) \bs X^*]\)</span>, <span class="math inline">\(\bs A = I_{n g} - \bs\Gamma \otimes \bs W\)</span>, <span class="math inline">\(\bs B = I_{ng} - \bs\Lambda \otimes \bs W\)</span> e <span class="math inline">\(\bs\Omega = \bs\Sigma \otimes I_n\)</span>.</p>
+<p><br></p>
+<p>Ao todo, temos que estimar <span class="math inline">\(2 \sum_{i=1}^g k_i + g + \frac{g(g+1)}{2}\)</span> parâmetros 😨😱.</p>
+</section>
+</section>
+<section id="aplicação-1" class="level1">
+<h1>Aplicação 1</h1>
+<section id="conjunto-de-dados" class="level2">
+<h2 class="anchored" data-anchor-id="conjunto-de-dados">Conjunto de Dados</h2>
+<p>Banco de dados:</p>
+<ul>
+<li>spc: este banco de dados ilustra um exemplo classico da curva de Phillips retirado de Anselin (<span class="math inline">\(1988\)</span>, pp.&nbsp;<span class="math inline">\(203\)</span>–<span class="math inline">\(211\)</span>).</li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Curva de Phillips
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>A curva de Phillips é uma teoria macroeconômica que mostra a relação entre a taxa de desemprego e a taxa de inflação no curto prazo. Ela foi criada pelo economista neozelandês Alban William Phillips, a partir de dados do Reino Unido entre <span class="math inline">\(1861\)</span> e <span class="math inline">\(1957\)</span>.</p>
+<center>
+<img src="figuras/phillips.jpg" class="img-fluid" style="width:23.0%">
+</center>
+</div>
+</div>
+</div>
+</section>
+<section id="spc" class="level2">
+<h2 class="anchored" data-anchor-id="spc">spc</h2>
+<p>Objetivo do estudo: analisar como diferentes variáveis impactaram as mudanças nas taxas salariais de <span class="math inline">\(1981\)</span> para <span class="math inline">\(1983\)</span> em <span class="math inline">\(25\)</span> condados do sudoeste de Ohio.</p>
+<p>Sejam as equações:</p>
+<p><span class="math display">\[\text{Equação 1:} \quad WAGE_{83} = \beta_{10} + \beta_{11} UN_{83} + \beta_{12} NMR_{83} + \beta_{13} SMSA + u_{83}.\]</span></p>
+<p><span class="math display">\[\text{Equação 2:} \quad WAGE_{81} = \beta_{20} + \beta_{21} UN_{81} + \beta_{22} NMR_{81} + \beta_{23} SMSA + u_{81}.\]</span></p>
+<div class="nonincremental">
+<ul>
+<li><em>WAGE:</em> mudanças nas taxas salariais;</li>
+<li><em>UN:</em> taxa de desemprego;</li>
+<li><em>NMR:</em> taxa líquida de migração;</li>
+<li><em>SMSA:</em> variável dummy (<span class="math inline">\(1\)</span> para condados metropolitanos, <span class="math inline">\(0\)</span> caso contrário).</li>
+</ul>
+</div>
+</section>
+<section id="spc-1" class="level2">
+<h2 class="anchored" data-anchor-id="spc-1">spc</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pacotes utilziados na aplicação</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'gridExtra'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'ggplot2'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'dplyr'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'Rcpp'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'Gmisc'</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'grid'</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'spdep'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'sf'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">'spsur'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Sintaxe</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>spcformula <span class="ot">&lt;-</span> WAGE83 <span class="sc">|</span> WAGE81 <span class="sc">~</span> UN83 <span class="sc">+</span> NMR83 <span class="sc">+</span> SMSA <span class="sc">|</span> UN80 <span class="sc">+</span> NMR80 <span class="sc">+</span> SMSA</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Criação do modelo SLM</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>spcsur.slm <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">formula =</span> spcformula, <span class="at">data =</span> spc, <span class="at">type =</span> <span class="st">'slm'</span>, <span class="at">method =</span> <span class="st">'eigen'</span>, <span class="at">listw =</span> Wspc)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>neighbourhood matrix eigenvalues
+Computing eigenvalues ...
+
+Initial point:   log_lik:  113.198  rhos:  -0.472 -0.446 
+Iteration:  1   log_lik:  114.088  rhos:  -0.506 -0.482 
+Iteration:  2   log_lik:  114.098  rhos:  -0.506 -0.482 
+Iteration:  3   log_lik:  114.099  rhos:  -0.505 -0.482 
+Time to fit the model:  1.13  seconds
+Time to compute covariances:  0.31  seconds </code></pre>
+</div>
+</div>
+<div class="nonincremental">
+<ul>
+<li><em>type:</em> slm (Spatial Lag Model), que considera <span class="math inline">\(\lambda_t = 0\)</span> e <span class="math inline">\(\bs\theta_t= 0\)</span>, <span class="math inline">\(\forall t\)</span>.</li>
+<li><em>method:</em> “eigen”, utilizado para o cálculo do <span class="math inline">\(|A|\)</span> e <span class="math inline">\(|B|\)</span>, sendo mais eficiente para amostras pequenas, mas computacionalmente caro para amostras grandes. Alternativa: realizar Fatoração LU ou Cholesky.</li>
+<li><em>listw:</em> lista de pesos espaciais, usada para definir vizinhanças em modelos espaciais.</li>
+</ul>
+</div>
+</section>
+<section id="spc-2" class="level2">
+<h2 class="anchored" data-anchor-id="spc-2">spc</h2>
+<ul>
+<li><p><span class="math inline">\(\rho\)</span> é o parâmetro de autoregressão espacial, que indica a intensidade da dependência espacial nas variáveis dependentes. No nosso caso, <span class="math inline">\(\rho_1 = -0.505 &lt; 0\)</span> e <span class="math inline">\(\rho_2 = -0.482 &lt; 0\)</span> refletem uma dependência espacial negativa.</p></li>
+<li><p>Bastou três iterações para a convergência do algoritmo, visto que não houveram mudanças significativas na função de verossimilhança e nos <span class="math inline">\(\rho\)</span>.</p></li>
+</ul>
+</section>
+<section id="spc-3" class="level2">
+<h2 class="anchored" data-anchor-id="spc-3">spc</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(spcsur.slm)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+spsurml(formula = spcformula, data = spc, listw = Wspc, type = "slm", 
+    method = "eigen")
+
+ 
+Spatial SUR model type:  slm 
+
+Equation  1 
+                Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)_1  1.4947178  0.2467450  6.0577 5.244e-07 ***
+UN83_1         0.8053338  0.2558760  3.1474  0.003249 ** 
+NMR83_1       -0.5165301  0.2590369 -1.9940  0.053557 .  
+SMSA_1        -0.0072526  0.0118566 -0.6117  0.544484    
+rho_1         -0.5048488  0.2405967 -2.0983  0.042763 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+R-squared: 0.622 
+  Equation  2 
+                Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)_2  1.7088173  0.2925087  5.8419 1.028e-06 ***
+UN80_2        -0.6736472  0.3870209 -1.7406   0.09007 .  
+NMR80_2        0.7475735  0.3840119  1.9467   0.05919 .  
+SMSA_2         0.0013487  0.0241871  0.0558   0.95583    
+rho_2         -0.4816233  0.2557338 -1.8833   0.06754 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+R-squared: 0.4743 
+  
+Variance-Covariance Matrix of inter-equation residuals:                            
+  0.0003091646 -0.0003578072
+ -0.0003578072  0.0015874436
+Correlation Matrix of inter-equation residuals:                      
+  1.0000000 -0.5107461
+ -0.5107461  1.0000000
+
+ R-sq. pooled: 0.6601 
+ Breusch-Pagan: 6.543  p-value: (0.0105) 
+ LMM: 0.50474  p-value: (0.477)</code></pre>
+</div>
+</div>
+<p>O teste de Breusch-Pagan (da matriz de covariância diagonal) é o responsável por testar se a diagonal da matriz de variância contemporânea é igual à <span class="math inline">\(0\)</span>. Note que <span class="math inline">\(\text{p-valor} = 0.0105 &lt; 0.05\)</span>, logo, as equações possuem variâncias nulas, notável na saída da matriz de variância-covariância dos resíduos.</p>
+</section>
+<section id="spc-4" class="level2">
+<h2 class="anchored" data-anchor-id="spc-4">spc</h2>
+<p>A saída LMM é o multiplicador Lagrangiano marginal, usado para testar se foram omitidos efeitos espaciais decorrentes dos modelos estimados. Nesse caso, como <span class="math inline">\(\text{p-valor} = 0.477 &gt; 0.05\)</span> não temos evidências suficientes para rejeitar a hipótese nula em favor da alternativa, isto é, não há evidência de autocorrelação espacial dos resíduos.</p>
+</section>
+<section id="intervalos-de-confiança-para-os-betas-da-primeira-equação" class="level2">
+<h2 class="anchored" data-anchor-id="intervalos-de-confiança-para-os-betas-da-primeira-equação">Intervalos de confiança para os betas da primeira equação</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(spcsur.slm)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<center>
+<img src="figuras/ic_betas_eq_1.png" class="img-fluid" style="width:70.0%">
+</center>
+</section>
+<section id="intervalos-de-confiança-para-os-betas-da-segunda-equação" class="level2">
+<h2 class="anchored" data-anchor-id="intervalos-de-confiança-para-os-betas-da-segunda-equação">Intervalos de confiança para os betas da segunda equação</h2>
+<center>
+<img src="figuras/ic_betas_eq_2.png" class="img-fluid" style="width:70.0%">
+</center>
+</section>
+<section id="intervalos-de-confiança-para-rho" class="level2">
+<h2 class="anchored" data-anchor-id="intervalos-de-confiança-para-rho">Intervalos de confiança para <span class="math inline">\(\rho\)</span></h2>
+<center>
+<img src="figuras/ic_rhos_1_2.png" class="img-fluid" style="width:70.0%">
+</center>
+</section>
+<section id="spc-5" class="level2">
+<h2 class="anchored" data-anchor-id="spc-5">spc</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Razão de verossimilhanças</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>spcsur.slm <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">formula =</span> spcformula, <span class="at">data =</span> spc, <span class="at">type =</span> <span class="st">'slm'</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> Wspc, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>spcsur.sdm <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">formula =</span> spcformula, <span class="at">data =</span> spc, <span class="at">type =</span> <span class="st">'sdm'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> Wspc, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(spcsur.slm, spcsur.sdm)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             logLik df     AIC     BIC LRtest  p.val
+model 1: slm 114.10 13 -202.20 -219.19              
+model 2: sdm 116.78 19 -195.57 -220.40 5.3701 0.4973</code></pre>
+</div>
+</div>
+<p>É possível comparar se modelos de diferentes tipos são equivalentes com a função anova. Foi considerado o modelo SUR-SDM, que além de incluir a defasagem espacial das variáveis respostas, inclui para as preditoras.</p>
+<p>Como <span class="math inline">\(\text{p-valor} = 0.4973 &gt; 0.05\)</span> não temos evidências suficientes para rejeitar a hipótese nula de que os modelos diferem.</p>
+<p>Além disso, os critérios AIC e BIC penalizam modelos com mais parâmetros, busca-se valores menores desses critérios, indicando modelos mais parcimoniosos, isto é, uma explicação boa dos dados com o menor número possível de parâmetros.</p>
+</section>
+<section id="spc-6" class="level2">
+<h2 class="anchored" data-anchor-id="spc-6">spc</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Teste de Wald, nesse caso estamos comparando se os interceptos são os mesmos</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wald_betas</span>(spcsur.slm, <span class="at">R =</span> R1, <span class="at">b =</span> b1)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wald test on beta parameters
+
+data:  spc
+Wald test = 0.39767, df = 1, p-value = 0.5283</code></pre>
+</div>
+</div>
+<p>Os interceptos não são estatisticamente diferentes entre si. Logo, uma especificação correta seria incluir o mesmo intercepto nas duas equações.</p>
+</section>
+<section id="spc-7" class="level2">
+<h2 class="anchored" data-anchor-id="spc-7">spc</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># adicionou um intercepto e fez um modelo restrito</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>spcsur.slm.restricted <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">formula =</span> spcformula, <span class="at">data =</span> spc, <span class="at">type =</span> <span class="st">'slm'</span>, <span class="at">listw =</span> Wspc,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">R =</span> R1, <span class="at">b =</span> b1, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(spcsur.slm.restricted)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            coeff_1 pval_1 coeff_2 pval_2
+(Intercept)  1.5786  0.000  1.5786  0.000
+UN83         0.7946  0.003      NA     NA
+NMR83       -0.4873  0.064      NA     NA
+SMSA        -0.0056  0.632  0.0029  0.906
+UN80             NA     NA -0.6193  0.120
+NMR80            NA     NA  0.7083  0.079
+rho         -0.5856  0.006 -0.3705  0.052</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Teste que compara ro1 de ro2 DO MODELO RESTRITO</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wald_deltas</span>(spcsur.slm.restricted, <span class="at">R =</span> R2, <span class="at">b =</span> b2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wald test on spatial delta parameters
+
+data:  spc
+Wald test = 16.932, df = 1, p-value = 3.874e-05</code></pre>
+</div>
+</div>
+<p>Confirmação de que a especificação com dois parâmetros diferentes da dependencia espacial estava correta.</p>
+</section>
+<section id="verificando-normalidade-dos-resíduos" class="level2">
+<h2 class="anchored" data-anchor-id="verificando-normalidade-dos-resíduos">Verificando normalidade dos resíduos</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>residuos_eq1 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(spcsur.slm)[[<span class="dv">1</span>]]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(residuos_eq1, <span class="at">main =</span> <span class="st">'QQ Plot dos Resíduos - Equação 1'</span>, <span class="at">col =</span> <span class="st">'blue'</span>, <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">'Quantis Amostrais'</span>, <span class="at">xlab =</span> <span class="st">'Quantis Teóricos'</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(residuos_eq1, <span class="at">col =</span> <span class="st">'red'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="verificando-normalidade-dos-resíduos-1" class="level2">
+<h2 class="anchored" data-anchor-id="verificando-normalidade-dos-resíduos-1">Verificando normalidade dos resíduos</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>residuos_eq2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(spcsur.slm)[[<span class="dv">2</span>]]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(residuos_eq2, <span class="at">main =</span> <span class="st">'QQ Plot dos Resíduos - Equação 2'</span>, <span class="at">col =</span> <span class="st">'blue'</span>, <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">'Quantis Amostrais'</span>, <span class="at">xlab =</span> <span class="st">'Quantis Teóricos'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(residuos_eq2, <span class="at">col =</span> <span class="st">'red'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="aplicação-2" class="level1">
+<h1>Aplicação 2</h1>
+<section id="ncovr" class="level2">
+<h2 class="anchored" data-anchor-id="ncovr">NCOVR</h2>
+<p>O segundo conjunto de dados, retirado de Ballter et al.&nbsp;(<span class="math inline">\(2001\)</span>), refere-se as taxas de homicídios em <span class="math inline">\(3085\)</span> condados dos EUA para quatro anos (<span class="math inline">\(1960\)</span>, <span class="math inline">\(1970\)</span>, <span class="math inline">\(1980\)</span> e <span class="math inline">\(1990\)</span>).</p>
+<p><span class="math display">\[\begin{align*}
+\text{Equação 1:}&amp; \quad HR_{80} = \beta_{10} + \beta_{11} PS_{83} + \beta_{12} UE_{83} + \beta_{13} SMSA + u_{HR}\\
+\text{Equação 2:}&amp; \quad DV_{80} = \beta_{20} + \beta_{21} PS_{80} + \beta_{22} UE_{80} + \beta_{23} SOUTH + u_{EDV}\\
+\text{Equação 3:}&amp; \quad FP_{79} = \beta_{3   0} + \beta_{31} PS_{80} + u_{FR}
+\end{align*}\]</span></p>
+<div class="nonincremental">
+<ul>
+<li><span class="math inline">\(HR_{80}:\)</span> taxa de homicídios por <span class="math inline">\(100.000\)</span> habitantes em <span class="math inline">\(1980\)</span>.</li>
+<li><span class="math inline">\(PS_{80}:\)</span> estrutura populacional de <span class="math inline">\(1980\)</span>.</li>
+<li><span class="math inline">\(UE_{80}:\)</span> taxa de desemprego em <span class="math inline">\(1980\)</span>.</li>
+<li><span class="math inline">\(DV_{80}:\)</span> taxa de divórcio em <span class="math inline">\(1980\)</span>.</li>
+<li><span class="math inline">\(FP_{79}:\)</span> porcentagem de famílias abaixo da linha de pobreza em <span class="math inline">\(1980\)</span>.</li>
+<li><span class="math inline">\(SOUTH:\)</span> variável dummy (<span class="math inline">\(1\)</span> para condados do sul, <span class="math inline">\(0\)</span> caso contrário).</li>
+</ul>
+</div>
+</section>
+<section id="distribuição-espacial-das-taxas-de-homicídios-em-1980" class="level2">
+<h2 class="anchored" data-anchor-id="distribuição-espacial-das-taxas-de-homicídios-em-1980">Distribuição espacial das taxas de homicídios em <span class="math inline">\(1980\)</span></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">'NCOVR'</span>, <span class="at">package =</span> <span class="st">'spsur'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>co <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_coordinates</span>(sf<span class="sc">::</span><span class="fu">st_centroid</span>(NCOVR.sf))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>ncovrlw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(<span class="fu">knn2nb</span>(<span class="fu">knearneigh</span>(co, <span class="at">k =</span> <span class="dv">10</span>, <span class="at">longlat =</span> <span class="cn">TRUE</span>)), <span class="at">style =</span> <span class="st">'W'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(NCOVR.sf<span class="sc">$</span>HR80)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>NCOVR.sf<span class="sc">$</span>Quantile<span class="ot">&lt;-</span> <span class="fu">as.factor</span>((NCOVR.sf<span class="sc">$</span>HR80 <span class="sc">&gt;</span> q[<span class="dv">2</span>]) <span class="sc">+</span> (NCOVR.sf<span class="sc">$</span>HR80 <span class="sc">&gt;</span> q[<span class="dv">3</span>]) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  (NCOVR.sf<span class="sc">$</span>HR80 <span class="sc">&gt;=</span>  q[<span class="dv">4</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> NCOVR.sf) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Quantile), <span class="at">color =</span> <span class="st">'black'</span>, <span class="at">size =</span> .<span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'#FFFEDE'</span>, <span class="st">'#FFDFA2'</span>, <span class="st">'#FFA93F'</span>, <span class="st">'#D5610D'</span>))<span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">'cm'</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="aplicação-3" class="level1">
+<h1>Aplicação 3</h1>
+<section id="simulação-2" class="level2">
+<h2 class="anchored" data-anchor-id="simulação-2">Simulação</h2>
+<p>Foram gerados 537 indivíduos para a simulação dentro de um hexágono regular. Além disso, foram consideradas as equações:</p>
+<p><span class="math display">\[\text{Equação 1:} \quad Y_1 = 1 + 0.2 \bs WY_1 + 2X_{11} + 3 X_{12} + \varepsilon_1\]</span> <span class="math display">\[\text{Equação 2:} \quad Y_2 = 1 + 0.8 \bs W Y_2 - X_{21} + 0.5 X_{22} + \varepsilon_2\]</span> <span class="math display">\[\operatorname{cor}(\varepsilon_1, \varepsilon_2) = 0.5\]</span></p>
+</section>
+<section id="modelo-errado---sim" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-errado---sim">Modelo Errado - SIM</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(patchwork)  <span class="co"># arrumar gráficos ggplot</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>sfc <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_polygon</span>(<span class="fu">list</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">1</span><span class="sc">:</span><span class="dv">0</span>, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)))))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>hexs <span class="ot">&lt;-</span> <span class="fu">st_make_grid</span>(sfc, <span class="at">cellsize =</span> <span class="fl">0.049</span>, <span class="at">square=</span>F)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>hexs.sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(hexs)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># gerando dados</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(<span class="fu">poly2nb</span>(<span class="fu">as</span>(hexs.sf, <span class="st">'Spatial'</span>), <span class="at">queen =</span> <span class="cn">FALSE</span>))  <span class="co"># Matriz de ponderação (rook criteria)</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>  , <span class="fl">0.5</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                  <span class="fl">0.5</span>, <span class="dv">1</span>), <span class="dv">2</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>Betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="fl">0.5</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">dgp_spsur</span>(<span class="at">Sigma =</span> Sigma, <span class="at">Betas =</span> Betas, <span class="at">Thetas =</span> <span class="cn">NULL</span>, <span class="at">lambda =</span> <span class="cn">NULL</span>, <span class="at">rho =</span> rho, <span class="at">Tm =</span> <span class="dv">1</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">G =</span> <span class="dv">2</span>, <span class="at">N =</span> <span class="dv">537</span>, <span class="at">p =</span> <span class="dv">3</span>, <span class="at">listw =</span> W)  <span class="co"># SUR-SLM</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># estimando modelos</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">## SUR-SIM - modelo errado</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>sur_sim <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">Y =</span> db<span class="sc">$</span>Y, <span class="at">X =</span> db<span class="sc">$</span>X, <span class="at">type =</span> <span class="st">'sim'</span>, <span class="at">G =</span> <span class="dv">2</span>, <span class="at">Tm =</span> <span class="dv">1</span>, <span class="at">N =</span> <span class="dv">537</span>, <span class="at">p =</span> <span class="dv">3</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                   <span class="at">listw =</span> W, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(sur_sim)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>hexs.sf<span class="sc">$</span>res.eq1 <span class="ot">&lt;-</span> res[[<span class="dv">1</span>]]</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>hexs.sf<span class="sc">$</span>res.eq2 <span class="ot">&lt;-</span> res[[<span class="dv">2</span>]]</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="do">### gráfico do resíduo</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>tema <span class="ot">&lt;-</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'none'</span>, <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(), <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="fl">0.5</span>))</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>graf1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> hexs.sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> res.eq1), <span class="at">color =</span> <span class="st">'gray'</span>, <span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span> tema <span class="sc">+</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Equação 1'</span>)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>graf2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> hexs.sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> res.eq2), <span class="at">color =</span> <span class="st">'gray'</span>, <span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span> tema <span class="sc">+</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Equação 2'</span>)</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>graf1 <span class="sc">+</span> graf2</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="modelo-certo---slm" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-certo---slm">Modelo Certo - SLM</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## SUR-SLM - modelo certo</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sur_slm <span class="ot">&lt;-</span> <span class="fu">spsurml</span>(<span class="at">Y =</span> db<span class="sc">$</span>Y, <span class="at">X =</span> db<span class="sc">$</span>X, <span class="at">type =</span> <span class="st">'slm'</span>, <span class="at">G =</span> <span class="dv">2</span>, <span class="at">Tm =</span> <span class="dv">1</span>, <span class="at">N =</span> <span class="dv">537</span>, <span class="at">p =</span> <span class="dv">3</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">listw =</span> W, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">trace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(sur_slm)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>hexs.sf<span class="sc">$</span>res.eq1 <span class="ot">&lt;-</span> res[[<span class="dv">1</span>]]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>hexs.sf<span class="sc">$</span>res.eq2 <span class="ot">&lt;-</span> res[[<span class="dv">2</span>]]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="do">### gráfico do resíduo</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>graf1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> hexs.sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> res.eq1), <span class="at">color =</span> <span class="st">'gray'</span>, <span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span> tema <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Equação 1'</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>graf2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> hexs.sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> res.eq2), <span class="at">color =</span> <span class="st">'gray'</span>, <span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span> tema <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Equação 2'</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>graf1 <span class="sc">+</span> graf2</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ME715_Apresentacao_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="modelo-certo" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-certo">Modelo Certo</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sur_slm)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+spsurml(listw = W, type = "slm", X = db$X, Y = db$Y, G = 2, N = 537, 
+    Tm = 1, p = 3, control = list(trace = FALSE))
+
+ 
+Spatial SUR model type:  slm 
+
+Equation  1 
+           Estimate Std. Error t value  Pr(&gt;|t|)    
+Intercep_1 1.050658   0.052887  19.866 &lt; 2.2e-16 ***
+X1_1       2.009105   0.038119  52.706 &lt; 2.2e-16 ***
+X1_2       2.984680   0.035863  83.225 &lt; 2.2e-16 ***
+rho_1      0.161010   0.021984   7.324 4.746e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+R-squared: 0.9292 
+  Equation  2 
+            Estimate Std. Error  t value  Pr(&gt;|t|)    
+Intercep_2  2.066812   0.219397   9.4204 &lt; 2.2e-16 ***
+X2_1       -0.978890   0.038798 -25.2304 &lt; 2.2e-16 ***
+X2_2        0.469211   0.036570  12.8305 &lt; 2.2e-16 ***
+rho_2       0.791277   0.021862  36.1946 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+R-squared: 0.8029 
+  
+Variance-Covariance Matrix of inter-equation residuals:                    
+ 0.9994753 0.5283877
+ 0.5283877 1.0096595
+Correlation Matrix of inter-equation residuals:                    
+ 1.0000000 0.5259921
+ 0.5259921 1.0000000
+
+ R-sq. pooled: 0.9632 
+ Breusch-Pagan: 148.6  p-value: (3.56e-34) 
+ LMM: 6.4689  p-value: (0.011)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="críticas" class="level1">
+<h1>Críticas</h1>
+<ul>
+<li><p>Interpretação dos <span class="math inline">\(\beta\)</span>s (efeito direto, indireto e total).</p></li>
+<li><p>Observações possívelmente discrepantes, sem análise aprofundada.</p></li>
+<li><p>Implementação em Python (<strong>PySAL</strong>) e Julia.</p></li>
+</ul>
+</section>
+<section id="muito-obrigado" class="level1">
+<h1>Muito Obrigado!</h1>
+<center>
+<img src="figuras/bob.webp" class="img-fluid" style="width:45.0%">
+</center>
+</section>
+<section id="referências" class="level1">
+<h1>Referências</h1>
+<ul>
+<li><p>Maza, C.T. (2024). Modelos SUR [Slides de apresentação]. Instituto de Matemática, Estatística e Computação Científica, Universidade Estadual de Campinas. <a href="https://ctruciosm.github.io/ME715-unicamp/ME715_Aula10.html">https://ctruciosm.github.io/ME715-unicamp/ME715_Aula10.html</a>.</p></li>
+<li><p>Mínguez, R., López, F.A., &amp; Mur, J. (2022). spsur: An R Package for Dealing with Spatial Seemingly Unrelated Regression Models. <em>Journal of Statistical Software</em>, 104(11), 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">doi: 10.18637/jss.v104.i11</a>.</p></li>
+<li><p>Anselin L (1988). <em>Spatial Econometrics: Methods and Models. Studies in Operational Regional Science</em>. Springer-Verlag, Dordrecht. <a href="https://doi.org/10.1007/978-94-015-7799-1">doi: 10.1007/978-94-015-7799-1</a>.</p></li>
+<li><p>Baller, R.D. et al.&nbsp;(2001). Structural Covariates of US County Homicide Rates: Incorporating Spatial Effects. <em>Criminology</em>, 39(3), 561–588. <a href="https://doi.org/10.1111/j.1745-9125.2001.tb00933.x">doi: 10.1111/j.1745-9125.2001.tb00933.x</a>.</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiada");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiada");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

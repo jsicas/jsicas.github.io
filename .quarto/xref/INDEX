@@ -19,5 +19,8 @@
   },
   "scripts/ic/politica_de_limiar.qmd": {
     "politica_de_limiar.html": "d74bd53e"
+  },
+  "scripts/apresentacoes/ME715_Apresentacao.qmd": {
+    "ME715_Apresentacao.html": "6ff964e9"
   }
 }
