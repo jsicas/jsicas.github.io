@@ -8,4 +8,4 @@ format:
 
 Link da [Reunião 06/11](scripts/ic/politica_de_limiar.qmd)
 
-Link da [Apresentação](scripts/apresentacoes/ME715_Apresentacao.qmd)
+Link da [Apresentação](docs/apresentacoes/ME715_Apresentacao.html)
