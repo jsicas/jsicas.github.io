@@ -477,7 +477,7 @@ spcsur.slm <- spsurml(formula = spcformula, data = spc, type = 'slm', method = '
 summary(spcsur.slm)
 ```
 
-O teste de Breusch-Pagan (da matriz de covariância diagonal) é o responsável por testar se a diagonal da matriz de variância contemporânea é igual à $0$. Note que $\text{p-valor} = 0.0105 < 0.05$, logo, as equações possuem variâncias nulas, notável na saída da matriz de variância-covariância dos resíduos.
+O teste de Breusch-Pagan (da matriz de covariância diagonal) é o responsável por testar se a diagonal da matriz de variância contemporânea é igual à $0$. Note que $\text{p-valor} = 0.0105 < 0.05$, logo, as equações não possuem variâncias nulas, notável na saída da matriz de variância-covariância dos resíduos.
 
 
 
