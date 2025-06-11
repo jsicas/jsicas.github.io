@@ -1,11 +1,9 @@
 ---
-title: "jsicas.github.io"
+title: 'jsicas.github.io'
 format:
   html:
     html-math-method: mathjax
     include-in-header: mathjax1.html
 ---
 
-Link da [Reunião 06/11](scripts/ic/politica_de_limiar.qmd)
-
-Link da [Apresentação](docs/apresentacoes/ME715_Apresentacao.html)
+Link da [Apresentação ME861](docs/apresentacoes/ME861_Apresentacao.html).

@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "jsicas.github.io"
+  title: 'jsicas.github.io'
   navbar:
     left:
       - href: index.qmd
