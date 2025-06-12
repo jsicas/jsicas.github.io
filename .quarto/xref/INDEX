@@ -22,5 +22,8 @@
   },
   "scripts/apresentacoes/ME715_Apresentacao.qmd": {
     "ME715_Apresentacao.html": "6ff964e9"
+  },
+  "scripts/apresentacoes/regressaoII/ME861_Apresentacao.qmd": {
+    "ME861_Apresentacao.html": "e71bc678"
   }
 }

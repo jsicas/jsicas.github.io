@@ -1,0 +1,35 @@
+\documentclass[tikz, border=0pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}    % Empilhamento de equações de forma numerada
+\usepackage{forest}     % Diagrama do tipo "floresta"
+\usepackage{tikz}    % Fazer figuras
+\usepackage{xcolor}
+\usepackage{pagecolor}
+\definecolor{page}{HTML}{fcfbf9}
+\pagecolor{page}
+
+\begin{document}
+\begin{tikzpicture}[scale=1.2]
+	% Eixos
+	\draw[->, >=latex] (-2.5,0) -- (2.5,0) node[anchor=west] {$d$};
+	\draw[->, >=latex] (0,-2) -- (0,2) node[anchor=south] {$\delta^H(d)$};
+	
+	% Gráfico
+	\draw[line width = 1pt] (-2, -2) -- (-1,-1);
+	\draw[line width = 1pt, dashed] (-1,-1) -- (-1, 0);
+	\draw[line width = 1pt] (-1,0) -- (1, 0);
+	\draw[line width = 1pt, dashed] (1,0) -- (1, 1);
+	\draw[line width = 1pt] (1,1) -- (2, 2);
+	
+	% Pontos
+	\node[anchor=south] at (-1,0) {$-\lambda$};
+	\node[anchor=north] at (1,0) {$\lambda$};
+	\draw (3pt,1) -- (-3pt, 1);
+	\node[anchor=west] at (0,1) {$\lambda$};
+	\draw (3pt,-1) -- (-3pt, -1);
+	\node[anchor=east] at (0,-1) {$-\lambda$};
+\end{tikzpicture}
+\end{document}
+	
+\end{document}

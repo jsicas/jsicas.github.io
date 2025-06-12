@@ -362,5 +362,257 @@
     "title": "Modelo SUR",
     "section": "Modelo Certo",
     "text": "Modelo Certo\n\n\nCódigo\nsummary(sur_slm)\n\n\nCall:\nspsurml(listw = W, type = \"slm\", X = db$X, Y = db$Y, G = 2, N = 537, \n    Tm = 1, p = 3, control = list(trace = FALSE))\n\n \nSpatial SUR model type:  slm \n\nEquation  1 \n           Estimate Std. Error t value  Pr(&gt;|t|)    \nIntercep_1 1.050658   0.052887  19.866 &lt; 2.2e-16 ***\nX1_1       2.009105   0.038119  52.706 &lt; 2.2e-16 ***\nX1_2       2.984680   0.035863  83.225 &lt; 2.2e-16 ***\nrho_1      0.161010   0.021984   7.324 4.746e-13 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\nR-squared: 0.9292 \n  Equation  2 \n            Estimate Std. Error  t value  Pr(&gt;|t|)    \nIntercep_2  2.066812   0.219397   9.4204 &lt; 2.2e-16 ***\nX2_1       -0.978890   0.038798 -25.2304 &lt; 2.2e-16 ***\nX2_2        0.469211   0.036570  12.8305 &lt; 2.2e-16 ***\nrho_2       0.791277   0.021862  36.1946 &lt; 2.2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\nR-squared: 0.8029 \n  \nVariance-Covariance Matrix of inter-equation residuals:                    \n 0.9994753 0.5283877\n 0.5283877 1.0096595\nCorrelation Matrix of inter-equation residuals:                    \n 1.0000000 0.5259921\n 0.5259921 1.0000000\n\n R-sq. pooled: 0.9632 \n Breusch-Pagan: 148.6  p-value: (3.56e-34) \n LMM: 6.4689  p-value: (0.011)"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regressão Não Paramétrica",
+    "text": "Regressão Não Paramétrica\nConsidere o modelo: \\[\ny_i = f(x_i) + e_i \\;,\\spc i = 1,\\dots,n\n\\] com \\(e_i \\overset{iid}{\\sim} \\norm(0, \\sigma^2)\\).\n\nEm Problemas de regressão paramérica, assume-se uma forma funcional para \\(f\\), por exemplo, \\(f(x) = \\beta_0 + \\beta_1 x + \\dots + \\beta_p x^p\\).\n\nJá em problemas de regressão não paramétrica, \\(f\\) é desconhecida. Logo, para estimar \\(f\\) utiliza-se bases como ondaletas, splines entre outras.\n\nObservações \\(y\\) são resultantes da função verdadeira \\(f\\) contaminada de um erro \\(e\\)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regressão Não Paramétrica",
+    "text": "Regressão Não Paramétrica\nAdemais, em termos vetoriais, o modelo é dado por: \\[\n\\bs y = \\bs f + \\bs e\n\\] onde\n\\[\n\\bs y = \\begin{bmatrix}y_1\\\\\\vdots\\\\y_n\\end{bmatrix}, \\hspace{2.5cm} \\bs f = \\begin{bmatrix}f(x_1)\\\\\\vdots\\\\f(x_n)\\end{bmatrix}, \\hspace{2.5cm} \\bs e =\\begin{bmatrix}e_1\\\\\\vdots\\\\e_n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-3",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regressão-não-paramétrica-3",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regressão Não Paramétrica",
+    "text": "Regressão Não Paramétrica\n\nVantagens:\n\nMaior flexibilidade;\nCaptura padrões complexos e não lineares;\nAdapta-se aos dados, sendo especialmente útil quando há pouco conhecimento prévio sobre o modelo.\n\n\nDesvantagens:\n\nMenor interpretabilidade;\nNecessita de uma maior quantidade de dados."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Ondaleta",
+    "text": "Ondaleta\nSeja \\(\\psi \\in \\mathbb{L}_2(\\RR) = \\{f: \\RR \\to \\RR \\mid \\int f^2 &lt; \\infty\\}\\) uma função que satisfaça a condição \\[\nC_\\psi = \\int_\\RR \\frac{\\lvert\\Psi(\\omega)\\rvert^2}{\\lvert\\omega\\rvert} d\\omega &lt; \\infty\n\\] onde \\(\\Psi\\) é a transformada de Fourier de \\(\\psi\\). Então, dizemos que \\(\\psi\\) é uma ondaleta (mãe)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Ondaleta",
+    "text": "Ondaleta\nAlém disso, uma vez que a ondaleta foi definida, pode-se gerar ondaletas através de operações de dilatação e translação: \\[\n\\psi_{jk}(x) = 2^{j/2} \\psi (2^jx - k) \\;, \\spc j,k \\in \\ZZ\n\\]\nComo \\(\\{\\psi_{jk}\\}_{j,k \\in \\ZZ}\\) formam uma base ortonormal para \\(\\mathbb{L}_2(\\RR)\\), qualquer função \\(f \\in \\mathbb{L}_2(\\RR)\\) pode ser representada por: \\[\nf(x) = \\sum_{j,k \\in \\ZZ} d_{jk} \\psi_{jk}(x)\n\\] onde \\(d_{jk}\\) é chamado de coeficiente de ondaleta (“detalhes”).\n\n\nA partir da ondaleta mãe podemos gerar demais ondaletas.\nO conjunto de ondaletas formam uma base."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Ondaleta",
+    "text": "Ondaleta\nAlém disso, também existe a ondaleta pai ou função escala \\(\\phi\\), a qual fazemos translações e dilatações: \\[\n\\phi_{jk}(x) = 2^{j/2} \\phi (2^jx - k) \\;, \\spc j,k \\in \\NN\n\\]\nCom isso, para determinano nível \\(j_0 \\in \\ZZ\\) (resolução primária), uma função \\(f\\) pode ser escrita por: \\[\nf(x) = \\sum_{k \\in \\ZZ} c_{j_0k} \\phi_{j_0k}(x) + \\sum_{j \\geq j_0} \\sum_{k \\in \\ZZ} d_{jk}\\psi_{jk}(x)\n\\] onde \\(c_{jk}\\) é chamado de coeficiente da função escala.\n\nResslatar nome dos coeficientes:\n\n\\(c_{jk}\\): coeficiente da função escala;\n\\(d_{jk}\\): coeficiente da ondaleta;"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-3",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-3",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Ondaleta",
+    "text": "Ondaleta\nDo ponto de vista matricial, considerando um vetor de dados \\(\\bs y \\in \\RR^n\\) diádico, isto é, \\(n = 2^J\\), \\(J \\in \\NN\\). É possível aplicar a transformada discreta de ondaletas (DWT), representada pela matriz \\(W\\), de forma que \\[\n\\bs d = W \\bs y\n\\] onde \\(\\bs d\\) representa os coeficientes empíricos de ondaleta.\nAlém disso, como \\(W\\) é uma matriz ortogonal (\\(W' = W^{-1}\\)), a transformada discreta de ondaletas inversa (IDWT) é dada por: \\[\n\\bs y = W'\\bs d\n\\]\nAdemais, pela ortogonalidade de \\(W\\), temos que \\(\\|\\bs d\\|^2_2 = \\|\\bs y\\|^2_2\\) (Relação de Parseval).\n\n\n\\(W\\) é uma matriz ortogonal, então a transformada inversa é dada pela sua transposta;\n\\(W\\) é uma matriz ortogonal \\(\\Rightarrow\\) relação de Parseval;\nQuadrado da normal 2 é chamado de energia."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-4",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-4",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Ondaleta",
+    "text": "Ondaleta\n\n\n\n\n\nFigura 2: Funções ondaleta de Daubechies \\(\\psi\\) e escala \\(\\phi\\) para 1 (Haar), 2, 5 e 8 momentos nulos.\n\n\n\n\n\n\n\n\nApenas as ondaletas de Haar tem forma fechada;\nQuanto mais momentos nulos, mais ela oscila."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Exemplo 1: DWT",
+    "text": "Exemplo 1: DWT\nOndaleta (mãe) de Haar: \\[\n\\psi(x) =\n\\begin{cases}\n  1  &,  \\; x \\in \\left[0, \\frac{1}{2}\\right)\\\\\n  -1 &,  \\; x \\in \\left[\\frac{1}{2}, 1\\right)\\\\\n  0  &,  \\; c{.}c.\n\\end{cases}\n\\]\n\nFunção escala de Haar:\n\\[\n\\phi(x) =\n\\begin{cases}\n  1  &,  \\; x \\in [0, 1]\\\\\n  0  &,  \\; c{.}c.\n\\end{cases}\n\\]"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Exemplo 1: DWT",
+    "text": "Exemplo 1: DWT\nAgora que fixamos \\(\\psi\\) e \\(\\phi\\), falta apenas definir como calcular \\(c_{jk}\\) e \\(d_{jk}\\). Neste caso (considerando a ondaleta de Haar), eles podem ser calculados na primeira aplicação por:\n\\[\nd_{jk} = \\frac{1}{\\sqrt{2}}(y_{2k} - y_{2k-1}) \\hspace{2cm} \\text{ e } \\hspace{2cm} c_{jk} = \\frac{1}{\\sqrt{2}}(y_{2k} + y_{2k-1})\n\\] e, nas demais, por: \\[\nd_{jk} = \\frac{1}{\\sqrt{2}}(c_{j+1,2k} - c_{j+1, 2k-1}) \\hspace{2cm} \\text{ e } \\hspace{2cm}\nc_{jk} = \\frac{1}{\\sqrt{2}}(c_{j+1,2k} + c_{j+1,2k-1})\n\\]\n\n\nDiferenças e somas normalizadas."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-3",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-3",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Exemplo 1: DWT",
+    "text": "Exemplo 1: DWT\nConsiderando o vetor de dados \\(\\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'\\), a Figura 1 apresenta graficamente a DWT.\n\nFigura 1: Exemplo visual da DWT (Nason, 2008)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-4",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-4",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Exemplo 1: DWT",
+    "text": "Exemplo 1: DWT\n\n\n\n\n\nFigura 2: Decomposição dos coeficientes de ondaletas. por nível de resolução."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-5",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-5",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Exemplo 1: DWT",
+    "text": "Exemplo 1: DWT\nA matriz \\(W\\) que faz essa transformação para \\(n=8\\) observações é dada por:\n\\[\nW =\n\\begin{bmatrix}\n\\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4}\\\\\n\\frac{-1}{\\sqrt{2}} & \\frac{1}{\\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & 0\\\\\n0 & 0 & \\frac{-1}{\\sqrt{2}} & \\frac{1}{\\sqrt{2}} & 0 & 0 & 0 & 0\\\\\n0 & 0 &0 & 0 & \\frac{-1}{\\sqrt{2}} & \\frac{1}{\\sqrt{2}} & 0 & 0\\\\\n0 & 0 & 0 & 0 &0 & 0 & \\frac{-1}{\\sqrt{2}} & \\frac{1}{\\sqrt{2}}\\\\\n\\frac{-1}{2} & \\frac{-1}{2} & \\frac{1}{2} & \\frac{1}{2} & 0 & 0 & 0 & 0\\\\\n0 & 0 & 0 & 0 &\\frac{-1}{2} & \\frac{-1}{2} & \\frac{1}{2} & \\frac{1}{2}\\\\\n\\frac{-\\sqrt2}{4} & \\frac{-\\sqrt2}{4} & \\frac{-\\sqrt2}{4} & \\frac{-\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4} & \\frac{\\sqrt2}{4}\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Modelo",
+    "text": "Modelo\nPortanto, retomando ao modelo de regressão não paramétrica, temos que: \\[\n\\bs y = \\bs f + \\bs e\n\\] com \\(e_i \\overset{iid}{\\sim} \\norm(0, \\sigma^2)\\).\nEntão, multiplicando por \\(W\\) vamos ter o nosso modelo no domínio das ondaletas, dado por: \\[\n\\bs d = \\bs\\theta + \\bs\\varepsilon\n\\] onde\n\n\\(\\bs d = W \\bs y\\) é o vetor dos coeficientes empíricos de ondaleta;\n\\(\\bs \\theta = W \\bs f\\) é o vetor dos coeficientes verdadeiros;\n\\(\\bs\\varepsilon = W \\bs e\\) é o erro, o qual tem suas propriedades preservadas, i.e., \\(\\varepsilon_i \\overset{iid}{\\sim} \\norm(0,\\sigma^2)\\)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Modelo",
+    "text": "Modelo\nLogo, o problema de estimar a função \\(f\\) foi substituido por estimar os coeficientes de ondaletas \\(\\bs\\theta\\) através dos coeficientes empíricos \\(\\bs d\\).\n\nPara isso, a abordagem mais tradicional é a utilização das regras de shrinkage, neste caso, a limiarização (thresholding), a qual consiste em anular coeficientes suficientemente pequenos. As duas propostas mais comuns são a do limiar duro (hard threshold) e limiar suave (soft threshold).\n\nA intuição desta técnica consiste em que o vetor de coeficientes de ondaleta normalmente são esparsos. Além disso, coeficientes grandes estão associados às características importantes da função, como mínimos e máximos locais, descontinuidades entre outras. Enquanto que a parte mais suave da função se associa aos coeficientes nulos.\n\n\nSubistituimos estimar \\(f\\) por estimar \\(d\\), para isso, usamos regras de encolhimento.\nGrandes coeficientes de ondaletas são associados à características importantes da função."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-3",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-3",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Modelo",
+    "text": "Modelo\n\nRegra do limiar duro: \\[\n\\delta^H(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  d &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 1: Regra do limiar duro.\n\n\n\n\n\nRegra do limiar suave: \\[\n\\delta^S(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  \\operatorname{sgn}(d) (\\lvert d \\rvert - \\lambda) &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 1: Regra do limiar suave."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-4",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-4",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Modelo",
+    "text": "Modelo\nExistem diversas estratégias para determinar \\(\\lambda\\), algumas delas são:\n\nValidação cruzada.\nUniversal Threshold: utilizando o MAD (median absolute deviation) para estimar \\(\\sigma\\), temos: \\[\n\\lambda = \\sigma \\sqrt{2 \\ln(n)}\n\\]\nSURE Threshold: escolhe o \\(\\lambda\\) que minimiza o estimador não viesado do risco de Stein \\(SURE(\\lambda, \\bs y)\\), dado por: \\[\nSURE(\\lambda; \\mathbf{y}) = n - 2\\#\\{i:|y_i| \\leq \\lambda\\} + \\sum_{i}(\\min\\{|y_i|, \\lambda\\})^2\n\\]"
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#recapitulando",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#recapitulando",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Recapitulando",
+    "text": "Recapitulando\n  \n\nFigura 1: Resumo do procedimento de estimação."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-de-teste",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-de-teste",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Funções de Teste",
+    "text": "Funções de Teste\n\n\n\n\n\nFigura 2: Funções de teste de Donoho e Johnstone."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#razão-sinal-ruído-snr",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#razão-sinal-ruído-snr",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Razão Sinal-Ruído (SNR)",
+    "text": "Razão Sinal-Ruído (SNR)\nA razão sinal-ruído (SNR) é dada por:\n\\[\nSNR = \\frac{\\operatorname{SD}(\\text{sinal})}{\\operatorname{SD}(\\text{ruído})} = \\frac{\\operatorname{SD}(f)}{\\operatorname{SD}(\\varepsilon)}\n\\] Para estudos simulacionais, é interessante fixar a razão sinal-ruído para determinar o desepenho da téninca para aquela \\(SNR\\) e permitir a comparação com outros métodos.\n\n\n\n\n\nFigura 2: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#gerando-amostra",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#gerando-amostra",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Gerando Amostra",
+    "text": "Gerando Amostra\n\n\n\n\n\nFigura 2: Amostra gerada com \\(SNR = 3\\). Azul representa a função verdadeira e preto a amostra."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#coeficientes-de-ondaletas",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#coeficientes-de-ondaletas",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Coeficientes de Ondaletas",
+    "text": "Coeficientes de Ondaletas\n\n\n\n\n\nFigura 2: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.\n\n\n\n\n\n\n\nA quantidade de coeficientes nulos foi de 890."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#estimativa-da-bumps",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#estimativa-da-bumps",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Estimativa da Bumps",
+    "text": "Estimativa da Bumps\n\n\n\n\n\nFigura 2: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.\n\n\n\n\n\n\n\nRessaltar que a recuperação foi relativamente boa considerando \\(SNR=3\\), o qual já é considerado um caso com muito ruído."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#priore-spike-and-slab-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#priore-spike-and-slab-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Priore Spike and Slab",
+    "text": "Priore Spike and Slab\nExistem também propostas bayesianas para o problema, por exemplo, a apresentada em Barrios (2025), cuja priori atribuída é: \\[\\pi(\\theta) = \\alpha \\delta_0(\\theta) + (1 - \\alpha) g(\\theta; \\beta) \\hspace{1.2cm} \\text{ e } \\hspace{1.2cm} \\sigma^2 \\sim Exp(\\lambda)\\] onde \\(\\alpha \\in (0,1)\\), \\(\\lambda &gt; 0\\), \\(\\delta_0\\) é o delta de Dirac com massa em \\(0\\) e \\(g(d; \\beta)\\) é a função densidade da Epanechnikov Generalizada, dada por: \\[\ng(x; \\beta) = \\frac{3}{4\\beta^3}(\\beta^2 - x^2) \\ind_{(-\\beta, \\beta)}^{(x)}\n\\] com \\(\\beta &gt; 0\\).    \nVale ressaltar que, diferente das estratégias apresentadas anteriormente, propostas bayesianas não zeram os coeficientes, apenas encolhem.\n\nPropostas Bayesianas apenas encolhem, mas não zeram os coeficientes."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regra de Encolhimento",
+    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 2: Densidade da Epanechnikov Generalizada para \\(\\beta = 2\\), \\(3\\) e \\(5\\)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regra de Encolhimento",
+    "text": "Regra de Encolhimento\nCom isso, é possível estabelecer a distribuição a posteriori \\(\\theta \\mid d\\) de cada coeficiente:\n\\[\\begin{align*}\n\\pi(\\theta \\mid d) &\\propto \\pi(\\theta) \\LL(\\theta; d)\\\\\n&\\propto \\left[\\alpha \\delta_0(\\theta) + (1 - \\alpha) g(\\theta; \\tau) \\right]\\exp\\left\\{\\frac{-1}{2\\sigma^2} (d - \\theta)^2\\right\\}\n\\end{align*}\\]\nA regra de encolhimento é dada pela esperança da posteriori, calculando obtém-se que: \\[\n\\small\n\\delta(d) =\n\\dfrac{\n  (1-\\alpha) \\frac{3 \\sqrt{2\\lambda}}{8 \\beta^3}\n  \\left[ \\frac{2 \\lambda\\beta^2 + 3\\beta\\sqrt{2\\lambda} + 3}{2\\lambda^2}\n  \\left( e^{-\\sqrt{2\\lambda}(\\beta - d)} - e^{-\\sqrt{2\\lambda}(\\beta+d)} \\right)\n  + \\frac{(\\lambda\\beta^2 - 3) d\\sqrt{2\\lambda} - d^3\\lambda\\sqrt{2\\lambda}}{\\lambda^2}\n  \\right]\n}{\n  \\alpha \\frac{\\sqrt{2l}}{2} e^{-\\sqrt{(2l)}\\lvert d \\rvert}\n  \\left(0, \\frac{1}{\\sqrt{2\\lambda}} \\right) +\n  (1 - \\alpha) \\frac{3\\sqrt{2\\lambda}}{8\\beta^3} \\left[\\frac{\\beta}{\\lambda}\n  \\left( e^{-\\sqrt{2\\lambda}(\\beta + d)} + e^{-\\sqrt{2\\lambda}(\\beta-d)} \\right)\n+ \\frac{2}{\\sqrt{2\\lambda}} \\left(\\beta^2 - d^2 - \\frac{1}{\\lambda}\\right) \\right]\n}\n\\]    Por sorte, esta regra tem forma explicita, no geral, elas não são tratáveis analiticamente, sendo necessário utilizar métodos Monte Carlo para aproximá-la.\n\nÉ raro a regra ser tratável analiticamente, normalmente, é necessário utilizar métodos Monte Carlo.\nCuriosidade, esta regra foi desenvolvida para altos níveis de razão sinal-ruído."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Regra de Encolhimento",
+    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 2: Regra de encolhimento variando os parámetro \\(\\alpha\\), \\(\\beta\\) e \\(\\lambda\\), separadamente."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#contextualização",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#contextualização",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Contextualização",
+    "text": "Contextualização\nA epilepsia é um distúrbio neurológico caracterizado pela ocorrência de convulsões, causadas por uma atividade neuronal excessiva ou sincronizada no cérebro.\nEssas crises podem resultar em problemas psiquiátricos, quedas, déficits cognitivos e aumento do risco de morte.\nUma das estratégias mais promissoras é a detecção do estado pré-ictal, período que antecede uma crise.\nIdentificá-lo pode permitir ações preventivas e reduzir os impactos negativos das convulsões."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Aplicação",
+    "text": "Aplicação\nEste estudo utiliza dados do eletroencefalograma (EEG) do couro cabeludo de \\(14\\) pacientes, registrados com eletrodos reutilizáveis de prata e ouro.\nOs dados foram retirados de Detti et al. (2020), da Unidade de Neurologia e Neurofisiologia da Universidade de Siena, Itália.\nO banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações (em minutos).\nPara este estudo, foi seleiconado o paciente \\(5\\) com tamanho amostral correspondente a \\(n = 2^{15} = 32.768\\) observações."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-2",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-2",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Aplicação",
+    "text": "Aplicação\n\n\n\n\n\nFigura 2: Função observada (preto) e função recuperada (azul).\n\n\n\n\n\n\n\n\nPossível aplicação em detecção de pontos de mudança para determinar possível ataque epilético;\nFazer link com Análise de Dados Funcionais."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#simulação-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#simulação-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Simulação",
+    "text": "Simulação\nNa simulação foram comparados os cenários:\n\n\\(10.000\\) replicações;\n\\(n = 32\\) e \\(128\\) pontos;\n\\(SNR = 3\\) e \\(SNR = 7\\);\nFunções de teste: Bumps e SpaHet;\nMétodos aplicados:\n\nLimiarização com política SURE para escolha de limiar;\nProposta bayesiana com \\(\\alpha = 0.8\\), \\(\\lambda_{n=32} \\approx 0.34\\) e \\(\\lambda_{n=128} \\approx 1.3\\);\nSuaviazação por splines (método “concorrente”).\n\nForam utilizadas as ondaletas de Daubechies com \\(5\\) momentos nulos.\n\n\n\\(\\beta\\) é utilizado como o maior coeficiente de ondaleta em módulo, para que a regra faça sentido, devido ao domínio da Epanechnikov."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-usadas-na-simulação",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-usadas-na-simulação",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Funções Usadas na Simulação",
+    "text": "Funções Usadas na Simulação\n\n\n\n\n\nFigura 2: Funções de teste utilizadas na simulação.\n\n\n\n\n\n\n\nRessaltar:\n\nBumps é “mal comportada” (muitos picos);\nSpaHet é “bem comportada” (suave)."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#splines",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#splines",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Splines",
+    "text": "Splines\nNeste método, busca-se estimar uma função \\(g\\), tal que \\[\n\\sum_{i=1}^n (y_i - g(x_i))^2 + \\lambda\\int g''(t) dt\n\\] com \\(\\lambda \\leq 0\\).\nA função \\(g\\) que minimiza a condição é denominada de spline de suavização. Além disso, o parâmetro \\(\\lambda\\) controla a suavidade da função, onde:\n\n\\(\\lambda = 0\\): gera uma \\(g\\) interpoladora (não há penalização);\n\\(\\lambda \\to \\infty\\): aumenta a suavização de \\(g\\) até chegar em uma reta.\n\n\n\nToda observação é um knot, trocando o problema de posicioná-los (spline) por determinar \\(\\lambda\\) (suavização por spline).\nGera uma função suave.\nLembra métodos como LASSSO e Ridge."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Resultados",
+    "text": "Resultados\n\nTabela 1: Resultado da simulação com AMSE (SD).\n\n\n\n\n\n\nAMSE: Average Mean Squared Error."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados-1",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados-1",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Resultados",
+    "text": "Resultados\n\n\n\n\n\nFigura 2: Box Plot do MSE."
+  },
+  {
+    "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#vantagens-e-desvantagens-das-ondaletas",
+    "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#vantagens-e-desvantagens-das-ondaletas",
+    "title": "Regressão Não Paramétrica Através de Ondaletas",
+    "section": "Vantagens e Desvantagens das Ondaletas",
+    "text": "Vantagens e Desvantagens das Ondaletas\n\nVantages:\n\nModela funções com discontinuidades, picos entre outras características de modelar;\nRepresentação esparsa;\nGrande flexibilidade, já que existem diversos tipos de ondaletas, para diversos problemas.\n\n\nDesvantagens:\n\nNo geral, não apresentam forma fechada.\nMaior dificuldade em interpretação, comparado à metodos tradicionais."
   }
 ]

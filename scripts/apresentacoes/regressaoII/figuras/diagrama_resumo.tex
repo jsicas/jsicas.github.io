@@ -1,0 +1,26 @@
+\documentclass[varwidth, border=0pt, 12pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[all, line]{xy}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+% Define o fundo, se quiser
+\definecolor{page}{HTML}{fcfbf9}
+\pagecolor{page}
+
+\begin{document}
+	
+	% Caixa com largura/altura fixas
+	\begin{adjustbox}{width=13cm, height=0.9cm, center}
+		\xymatrix@C=2cm{
+			\boldsymbol{y} \ar[r]^-{\text{DWT}} &
+			\boldsymbol{d} \ar[r]^-{\delta(\boldsymbol{d})} &
+			\boldsymbol{\hat{\theta}} \ar[r]^-{\text{IDWT}} &
+			\boldsymbol{\hat{f}}
+		}
+	\end{adjustbox}
+	
+\end{document}

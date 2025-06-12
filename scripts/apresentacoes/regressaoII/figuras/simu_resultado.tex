@@ -1,0 +1,32 @@
+\documentclass[preview, border=0pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}    % Empilhamento de equações de forma
+\usepackage{forest}     % Diagrama do tipo "floresta"
+\usepackage{tikz}       % Fazer figuras
+\usepackage{xcolor}
+\usepackage{pagecolor}
+\definecolor{page}{HTML}{fcfbf9}
+\pagecolor{page}
+\usepackage{multirow}
+
+\begin{document}
+
+
+\begin{tabular}{ccccc}\hline\hline
+	Função                     & $n$  	 	          & Método    & $SNR=3$ & $SNR=7$\\\hline
+\multirow{6}{*}{\textit{Bumps}}& \multirow{3}{*}{32}  & Bayesiano & 6.24 (1.82) & 1.77 (0.73) \\
+							   &					  & SURE      & 10.63 (8.28) & 1.61 (0.69) \\
+		                       &					  & Splines   & 47.41 (0.81) & 47.18 (0.06) \\\cline{2-5}
+		                       & \multirow{3}{*}{128} & Bayesiano & 4.55 (0.71) & 1.58 (0.26) \\
+		                       &					  & SURE      & 6.19 (3.4) & 1.8 (0.51) \\
+	                           &					  & Splines   & 45.77 (4.24) & 46.52 (3.56) \\\hline
+\multirow{6}{*}{\textit{SpaHet}}		
+	 	& \multirow{3}{*}{32} & Bayesiano & 3.24 (1.05) & 0.77 (0.3) \\
+		&					  & SURE      & 2.66 (0.73) & 1.08 (0.37) \\
+		&					  & Splines   & 2.19 (1.32) & 0.47 (0.24) \\\cline{2-5}
+		& \multirow{3}{*}{128}& Bayesiano & 1.2 (0.38) & 0.19 (0.05) \\
+		&					  & SURE      & 1.42 (0.28) & 0.42 (0.12) \\
+		&					  & Splines   & 0.54 (0.26) & 0.12 (0.05) \\\hline\hline
+\end{tabular}
+\end{document}

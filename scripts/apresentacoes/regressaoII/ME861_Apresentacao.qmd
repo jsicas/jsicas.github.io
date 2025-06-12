@@ -1,0 +1,994 @@
+---
+title: 'Regressão Não Paramétrica Através de Ondaletas'
+subtitle: 'Uma Abordagem Bayesiana com Priore Spike and Slab'
+author: 'João Victor Siqueira Rodrigues, 236153<br>
+  Mariana Peres Nascimento, 204344<br>
+  Lara Maria Herrera, 236181<br>
+  Rodrigo Caldiron, 185416'
+institute: '<br>Instituto de Matemática, Estatística e Computação Científica (IMECC)<br>Universidade Estadual de Campinas (UNICAMP)'
+format:
+  revealjs:
+    transition: none
+    incremental: false
+    # html-math-method: katex
+    embed-resources: true
+    include-in-header: config/mathjax-macros.html
+    width: 1600
+    height: 900
+    code-fold: true
+    theme: [default, config/styles.scss]
+    title-slide-attributes:
+      data-background-image: figuras/unicamp.png
+      data-background-size: 15%
+      data-background-position: 96% 5%
+      data-background-opacity: '1'
+lang: pt
+fig-cap-location: top
+crossref:
+  eq-prefix: ''
+knitr:
+    opts_chunk: 
+      fig.align: 'center'
+editor_options: 
+  chunk_output_type: console
+---
+
+# Regressão Não Paramétrica
+
+```{r setup}
+# packages
+library(edf)         # leitura de dados
+library(doFuture)    # paralelização
+library(wavethresh)  # ondaletas
+
+source('R/spahet.R')
+source('R/epanec_shrink.R')
+
+# config
+set.seed(282829)
+```
+
+
+## Regressão Não Paramétrica
+Considere o modelo:
+$$
+y_i = f(x_i) + e_i \;,\spc i = 1,\dots,n
+$$
+com $e_i \overset{iid}{\sim} \norm(0, \sigma^2)$.
+
+<br>
+
+Em Problemas de regressão paramérica, assume-se uma forma funcional para $f$, por exemplo, $f(x) = \beta_0 + \beta_1 x + \dots + \beta_p x^p$.
+
+<br>
+
+Já em problemas de regressão não paramétrica, $f$ é desconhecida. Logo, para estimar $f$ utiliza-se bases como ondaletas, splines entre outras.
+
+::: {.notes}
+Observações $y$ são resultantes da função verdadeira $f$ contaminada de um erro $e$.
+:::
+
+<!-- Logo, as observações $y$ são resultantes da função verdadeira $f$ contaminada de um erro aditivo $e$. -->
+
+
+
+## Regressão Não Paramétrica
+Ademais, em termos vetoriais, o modelo é dado por:
+$$
+\bs y = \bs f + \bs e
+$$
+onde
+
+$$
+\bs y = \begin{bmatrix}y_1\\\vdots\\y_n\end{bmatrix}, \hspace{2.5cm} \bs f = \begin{bmatrix}f(x_1)\\\vdots\\f(x_n)\end{bmatrix}, \hspace{2.5cm} \bs e =\begin{bmatrix}e_1\\\vdots\\e_n\end{bmatrix}
+$$
+
+## Regressão Não Paramétrica
+<br>
+
+**Vantagens**:
+
+- Maior flexibilidade;
+- Captura padrões complexos e não lineares;
+- Adapta-se aos dados, sendo especialmente útil quando há pouco conhecimento prévio sobre o modelo.
+
+<br>
+
+**Desvantagens**:
+
+- Menor interpretabilidade;
+- Necessita de uma maior quantidade de dados.
+
+
+# Ondaletas (Wavelets)
+
+<!--
+Uma introdução ao tema abordado. 
+  - Regressão Não Paramétrica
+  - Ondaletas
+
+Descrição da metodologia e dos modelos de probabilidade envolvidos, com justificativa da importância do método escolhido.
+  - Justificar as ondaletas baseado na estimação de curvas mal comportadas
+
+Um exemplo simples de aplicação do método.
+  - Introduzir conceito de SNR
+  - Recuperar alguam função de DJ
+
+Um estudo de simulação que ilustre o desempenho do método em diferentes cenários e/ou configurações de parâmetros (quando aplicável). Sempre que possível, recomenda-se a comparação com métodos alternativos..
+  - Estudo de simulação comparando duas SNR e duas funções DJ e a Spahet e comparando com Splines.
+
+Aplicação do método a um conjunto de dados reais.
+  - Podemos usar problema de Spike Sorting
+
+Considerações finais (conclusão).
+-->
+
+
+
+## Ondaleta
+
+Seja $\psi \in \mathbb{L}_2(\RR) = \{f: \RR \to \RR \mid \int f^2 < \infty\}$ uma função que satisfaça a condição
+$$
+C_\psi = \int_\RR \frac{\lvert\Psi(\omega)\rvert^2}{\lvert\omega\rvert} d\omega < \infty
+$$
+onde $\Psi$ é a transformada de Fourier de $\psi$. Então, dizemos que $\psi$ é uma ondaleta (mãe).
+
+
+
+## Ondaleta
+Além disso, uma vez que a ondaleta foi definida, pode-se gerar ondaletas através de operações de dilatação e translação:
+$$
+\psi_{jk}(x) = 2^{j/2} \psi (2^jx - k) \;, \spc j,k \in \ZZ
+$$
+
+Como $\{\psi_{jk}\}_{j,k \in \ZZ}$ formam uma base ortonormal para $\mathbb{L}_2(\RR)$, qualquer função $f \in \mathbb{L}_2(\RR)$ pode ser representada por:
+$$
+f(x) = \sum_{j,k \in \ZZ} d_{jk} \psi_{jk}(x)
+$$
+onde $d_{jk}$ é chamado de coeficiente de ondaleta ("detalhes").
+
+::: {.notes}
+- A partir da ondaleta mãe podemos gerar demais ondaletas.
+- O conjunto de ondaletas formam uma base.
+:::
+
+
+
+## Ondaleta
+Além disso, também existe a ondaleta pai ou função escala $\phi$, a qual fazemos translações e dilatações:
+$$
+\phi_{jk}(x) = 2^{j/2} \phi (2^jx - k) \;, \spc j,k \in \NN
+$$
+
+Com isso, para determinano nível $j_0 \in \ZZ$ (resolução primária), uma função $f$ pode ser escrita por:
+$$
+f(x) = \sum_{k \in \ZZ} c_{j_0k} \phi_{j_0k}(x) + \sum_{j \geq j_0} \sum_{k \in \ZZ} d_{jk}\psi_{jk}(x)
+$$
+onde $c_{jk}$ é chamado de coeficiente da função escala.
+
+::: {.notes}
+Resslatar nome dos coeficientes:
+ 
+ - $c_{jk}$: coeficiente da função escala;
+ - $d_{jk}$: coeficiente da ondaleta;
+:::
+
+
+
+## Ondaleta
+Do ponto de vista matricial, considerando um vetor de dados $\bs y \in \RR^n$ diádico, isto é, $n = 2^J$, $J \in \NN$. É possível aplicar a transformada discreta de ondaletas (DWT), representada pela matriz $W$, de forma que
+$$
+\bs d = W \bs y
+$$
+onde $\bs d$ representa os coeficientes empíricos de ondaleta.
+
+Além disso, como $W$ é uma matriz ortogonal ($W' = W^{-1}$), a transformada discreta de ondaletas inversa (IDWT) é dada por:
+$$
+\bs y = W'\bs d
+$$
+
+Ademais, pela ortogonalidade de $W$, temos que $\|\bs d\|^2_2 = \|\bs y\|^2_2$ (Relação de Parseval).
+
+::: {.notes}
+- $W$ é uma matriz ortogonal, então a transformada inversa é dada pela sua transposta;
+- $W$ é uma matriz ortogonal $\Rightarrow$ relação de Parseval;
+- Quadrado da normal 2 é chamado de energia.
+:::
+
+
+
+## Ondaleta
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Funções ondaleta de Daubechies $\psi$ e escala $\phi$ para 1 (Haar), 2, 5 e 8 momentos nulos.'
+#| fig-width: 24
+#| fig-height: 12
+
+par(mfrow=c(2,4), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=2)
+draw.default(filter.number=1, family='DaubExPhase', enhance=FALSE, main='a.',
+             ylab=expression(psi(x)), sub='')
+draw.default(filter.number=2, family='DaubExPhase', enhance=FALSE, main='c.',
+             ylab=expression(psi(x)), sub='')
+draw.default(filter.number=5, family='DaubExPhase', enhance=FALSE, main='e.',
+             ylab=expression(psi(x)), sub='')
+draw.default(filter.number=8, family='DaubExPhase', enhance=FALSE, main='g.',
+             ylab=expression(psi(x)), sub='')
+
+draw.default(filter.number=1, family='DaubExPhase', enhance=FALSE,
+	scaling.function=TRUE, main='b.', ylab=expression(phi(x)), sub='')
+draw.default(filter.number=2, family='DaubExPhase', enhance=FALSE,
+	scaling.function=TRUE, main='d.', ylab=expression(phi(x)), sub='')
+draw.default(filter.number=5, family='DaubExPhase', enhance=FALSE,
+	scaling.function=TRUE, main='f.', ylab=expression(phi(x)), sub='')
+draw.default(filter.number=8, family='DaubExPhase', enhance=FALSE,
+	scaling.function=TRUE, main='h.', ylab=expression(phi(x)), sub='')
+```
+</div>
+
+::: {.notes}
+- Apenas as ondaletas de Haar tem forma fechada;
+- Quanto mais momentos nulos, mais ela oscila.
+:::
+
+
+
+# Exemplo 1: DWT
+
+## Exemplo 1: DWT
+Ondaleta (mãe) de Haar:
+$$
+\psi(x) =
+\begin{cases}
+  1  &,  \; x \in \left[0, \frac{1}{2}\right)\\
+  -1 &,  \; x \in \left[\frac{1}{2}, 1\right)\\
+  0  &,  \; c{.}c.
+\end{cases}
+$$
+
+<br>
+
+Função escala de Haar:
+
+$$
+\phi(x) =
+\begin{cases}
+  1  &,  \; x \in [0, 1]\\
+  0  &,  \; c{.}c.
+\end{cases}
+$$
+
+
+## Exemplo 1: DWT
+
+Agora que fixamos $\psi$ e $\phi$, falta apenas definir como calcular $c_{jk}$ e $d_{jk}$. Neste caso (considerando a ondaleta de Haar), eles podem ser calculados na primeira aplicação por:
+
+$$
+d_{jk} = \frac{1}{\sqrt{2}}(y_{2k} - y_{2k-1}) \hspace{2cm} \text{ e } \hspace{2cm} c_{jk} = \frac{1}{\sqrt{2}}(y_{2k} + y_{2k-1})
+$$
+e, nas demais, por:
+$$
+d_{jk} = \frac{1}{\sqrt{2}}(c_{j+1,2k} - c_{j+1, 2k-1}) \hspace{2cm} \text{ e } \hspace{2cm}
+c_{jk} = \frac{1}{\sqrt{2}}(c_{j+1,2k} + c_{j+1,2k-1})
+$$
+
+::: {.notes}
+- Diferenças e somas normalizadas.
+:::
+
+
+
+## Exemplo 1: DWT
+Considerando o vetor de dados $\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'$, a Figura 1 apresenta graficamente a DWT.
+
+:::{.center-text}
+**Figura 1**: Exemplo visual da DWT (Nason, 2008).
+:::
+<center>![](figuras/DWT_exemplo.png){width=85%}</center>
+
+
+
+## Exemplo 1: DWT
+
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Decomposição dos coeficientes de ondaletas. por nível de resolução.'
+#| fig-width: 10
+#| fig-height: 7
+#| results: hide
+
+par(mfrow=c(1,1), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=2)
+y <- c(1, 1, 7, 9, 2, 8, 8, 6)
+d <- wd(y, filter.number=1, family='DaubExPhase')
+plot(d, scaling='by.level', sub='', xlab='Translação', ylab='Nível de Resolução', main='')
+```
+</div>
+
+
+
+## Exemplo 1: DWT
+A matriz $W$ que faz essa transformação para $n=8$ observações é dada por:
+
+$$
+W =
+\begin{bmatrix}
+\frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4}\\
+\frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 & 0 & 0 & 0\\
+0 & 0 &0 & 0 & \frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 & 0\\
+0 & 0 & 0 & 0 &0 & 0 & \frac{-1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+\frac{-1}{2} & \frac{-1}{2} & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 &\frac{-1}{2} & \frac{-1}{2} & \frac{1}{2} & \frac{1}{2}\\
+\frac{-\sqrt2}{4} & \frac{-\sqrt2}{4} & \frac{-\sqrt2}{4} & \frac{-\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4} & \frac{\sqrt2}{4}
+\end{bmatrix}
+$$
+
+
+
+# Modelo
+
+## Modelo
+Portanto, retomando ao modelo de regressão não paramétrica, temos que:
+$$
+\bs y = \bs f + \bs e
+$$
+com $e_i \overset{iid}{\sim} \norm(0, \sigma^2)$.
+
+Então, multiplicando por $W$ vamos ter o nosso modelo no domínio das ondaletas, dado por:
+$$
+\bs d = \bs\theta + \bs\varepsilon
+$$
+onde
+
+- $\bs d = W \bs y$ é o vetor dos coeficientes empíricos de ondaleta;
+- $\bs \theta = W \bs f$ é o vetor dos coeficientes verdadeiros;
+- $\bs\varepsilon = W \bs e$ é o erro, o qual tem suas propriedades preservadas, i.e., $\varepsilon_i \overset{iid}{\sim} \norm(0,\sigma^2)$.
+
+
+
+## Modelo
+Logo, o problema de estimar a função $f$ foi substituido por estimar os coeficientes de ondaletas $\bs\theta$ através dos coeficientes empíricos $\bs d$.
+
+<br>
+
+Para isso, a abordagem mais tradicional é a utilização das **regras de shrinkage**, neste caso, a limiarização (*thresholding*), a qual consiste em anular coeficientes suficientemente pequenos. As duas propostas mais comuns são a do limiar duro (*hard threshold*) e limiar suave (*soft threshold*).
+
+<br>
+
+A intuição desta técnica consiste em que o vetor de coeficientes de ondaleta normalmente são esparsos. Além disso, coeficientes grandes estão associados às características importantes da função, como mínimos e máximos locais, descontinuidades entre outras. Enquanto que a parte mais suave da função se associa aos coeficientes nulos.
+
+::: {.notes}
+- Subistituimos estimar $f$ por estimar $d$, para isso, usamos regras de encolhimento.
+- Grandes coeficientes de ondaletas são associados à características importantes da função.
+:::
+
+
+
+## Modelo
+
+::: {.column width='50%'}
+Regra do limiar duro:
+$$
+\delta^H(d) =
+\begin{cases}
+  0 &, \text{ se } \lvert d \rvert \leq \lambda\\
+  d &, \text{ se } \lvert d \rvert > \lambda
+\end{cases}
+$$
+
+:::{.center-text}
+**Figura 1**: Regra do limiar duro.
+:::
+<center>![](figuras/hard_thresh.png){width=55%}</center>
+
+:::
+
+::: {.column width='50%'}
+Regra do limiar suave:
+$$
+\delta^S(d) =
+\begin{cases}
+  0 &, \text{ se } \lvert d \rvert \leq \lambda\\
+  \operatorname{sgn}(d) (\lvert d \rvert - \lambda) &, \text{ se } \lvert d \rvert > \lambda
+\end{cases}
+$$
+
+:::{.center-text}
+**Figura 1**: Regra do limiar suave.
+:::
+<center>![](figuras/soft_thresh.png){width=55%}</center>
+
+:::
+
+
+
+## Modelo
+Existem diversas estratégias para determinar $\lambda$, algumas delas são:
+
+- **Validação cruzada**.
+
+- **Universal Threshold**: utilizando o MAD (*median absolute deviation*) para estimar $\sigma$, temos:
+$$
+\lambda = \sigma \sqrt{2 \ln(n)}
+$$
+
+- **SURE Threshold**: escolhe o $\lambda$ que minimiza o estimador não viesado do risco de Stein $SURE(\lambda, \bs y)$, dado por:
+$$
+SURE(\lambda; \mathbf{y}) = n - 2\#\{i:|y_i| \leq \lambda\} + \sum_{i}(\min\{|y_i|, \lambda\})^2
+$$
+
+
+## Recapitulando
+
+<br>
+<br>
+<br>
+
+:::{.center-text}
+**Figura 1**: Resumo do procedimento de estimação.
+:::
+
+<center>![](figuras/diagrama_resumo.png){width=65%}</center>
+
+
+
+# Exemplo 2: Aplicando Método em Função de Teste
+
+## Funções de Teste
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Funções de teste de Donoho e Johnstone.'
+#| fig-width: 15
+#| fig-height: 7.5
+
+x <- (1:1024)/1024
+par(mfrow=c(2,2), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+plot(x, DJ.EX()$bumps, type='l', lwd=2, main='Bumps', ylab='y', xlab='x')
+plot(x, DJ.EX()$doppler, type='l', lwd=2, main='Doppler', ylab='y', xlab='x')
+plot(x, DJ.EX()$blocks, type='s', lwd=2, main='Blocks', ylab='y', xlab='x')
+plot(x, DJ.EX()$heavi, type='l', lwd=2, main='Heavisine', ylab='y', xlab='x')
+```
+</div>
+
+
+
+## Razão Sinal-Ruído (SNR)
+A razão sinal-ruído (SNR) é dada por:
+
+$$
+SNR = \frac{\operatorname{SD}(\text{sinal})}{\operatorname{SD}(\text{ruído})} = \frac{\operatorname{SD}(f)}{\operatorname{SD}(\varepsilon)}
+$$
+Para estudos simulacionais, é interessante fixar a razão sinal-ruído para determinar o desepenho da téninca para aquela $SNR$ e permitir a comparação com outros métodos.
+
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada.'
+#| fig-width: 17
+#| fig-height: 4.7
+
+# config
+par(mfrow=c(1,2), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+x <- (1:1024)/1024
+
+# SNR = 2 --------------------
+SNR <- 2
+sigma <- 7/SNR
+
+bumps <- DJ.EX()$bumps
+e <- rnorm(1024, 0, sd=sigma)
+
+plot(x, bumps + e, main='SNR = 2', type='l', ylab='y', xlab='x')
+lines(x, bumps, col='blue')
+
+# SNR = 7 --------------------
+SNR <- 7
+sigma <- 7/SNR
+
+bumps <- DJ.EX()$bumps
+e <- rnorm(1024, 0, sd=sigma)
+
+plot(x, bumps + e, main='SNR = 7', type='l', ylab='y', xlab='x')
+lines(x, bumps, col='blue')
+```
+</div>
+
+
+
+## Gerando Amostra
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Amostra gerada com $SNR = 3$. Azul representa a função verdadeira e preto a amostra.'
+#| fig-width: 16
+#| fig-height: 6
+#| results: hide
+
+# config
+par(mfrow=c(1,1), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+x <- (1:1024)/1024
+
+# gerando amostra
+SNR <- 5
+sigma <- 7/SNR                 # sd(erro)
+bumps <- DJ.EX()$bumps         # função verdadeira (f)
+e <- rnorm(1024, 0, sd=sigma)  # erro
+y <- bumps + e                 # amostra
+
+# plot
+plot(x, y, type='l', main='', xlab='x')
+lines(x, bumps, col='blue')
+```
+</div>
+
+
+
+## Coeficientes de Ondaletas
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.'
+#| fig-width: 13
+#| fig-height: 8.25
+#| results: hide
+
+# wavelets
+dwt <- wd(y, filter.number=2, family='DaubExPhase')  # coeficientes empíricos
+dwt_t <- threshold(dwt, policy='cv')                 # coeficientes estimados
+f_hat <- wr(dwt_t)                                   # função recuperada
+
+# config
+par(mfrow=c(2,1), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+x <- (1:1024)/1024
+
+# plot dos coeficientes de ondaletas
+plot(dwt, scaling='by.level', sub='', xlab='Translação',
+     ylab='Nível de Resolução', main='a.')
+plot(dwt_t, scaling='by.level', sub='', xlab='Translação',
+     ylab='Nível de Resolução', main='b.')
+```
+</div>
+
+::: {.notes}
+A quantidade de coeficientes nulos foi de `r sum(dwt_t$D == 0)`.
+:::
+
+
+
+## Estimativa da Bumps
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.'
+#| fig-width: 13
+#| fig-height: 8
+
+# config
+par(mfrow=c(1,1), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+x <- (1:1024)/1024
+
+# plot
+plot(x, bumps, col='blue', type='l', ylab='y', ylim=c(-1,60))
+lines(x, f_hat)
+```
+</div>
+
+::: {.notes}
+Ressaltar que a recuperação foi relativamente boa considerando $SNR=3$, o qual já é considerado um caso com muito ruído.
+:::
+
+
+
+# Priore Spike and Slab
+
+## Priore Spike and Slab
+
+Existem também propostas bayesianas para o problema, por exemplo, a apresentada em Barrios (2025), cuja priori atribuída é:
+$$\pi(\theta) = \alpha \delta_0(\theta) + (1 - \alpha) g(\theta; \beta) \hspace{1.2cm} \text{ e } \hspace{1.2cm} \sigma^2 \sim Exp(\lambda)$$
+onde $\alpha \in (0,1)$, $\lambda > 0$, $\delta_0$ é o delta de Dirac com massa em $0$ e $g(d; \beta)$ é a função densidade da Epanechnikov Generalizada, dada por:
+$$
+g(x; \beta) = \frac{3}{4\beta^3}(\beta^2 - x^2) \ind_{(-\beta, \beta)}^{(x)}
+$$
+com $\beta > 0$.
+<!-- $$ -->
+<!-- g(\theta; \tau) = \frac{\exp\left\{-\dfrac{\theta}{\tau}\right\}}{\tau \left( 1 + \exp\left\{-\dfrac{\theta}{\tau}\right\} \right)^2} \;\ind_\RR(\theta) \;, \spc\spc \beta > 0 -->
+<!-- $$ -->
+<br>
+
+Vale ressaltar que, diferente das estratégias apresentadas anteriormente, propostas bayesianas não zeram os coeficientes, apenas encolhem.
+
+
+::: {.notes}
+Propostas Bayesianas apenas encolhem, mas não zeram os coeficientes.
+:::
+
+<!-- ::: {.callout-note} -->
+<!-- ## Distribuição Logística -->
+
+<!-- Seja $X \sim \text{Logistica}(\tau)$, com $\tau > 0$, então sua função densidade de probabilidade é dada por: -->
+<!-- $$ -->
+<!-- g(x; \tau) = \frac{\exp\left\{-\dfrac{x}{\tau}\right\}}{\tau \left( 1 + \exp\left\{-\dfrac{x}{\tau}\right\} \right)^2} \;\ind_\RR(x) -->
+<!-- $$ -->
+<!-- ::: -->
+
+
+## Regra de Encolhimento
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Densidade da Epanechnikov Generalizada para $\beta = 2$, $3$ e $5$.'
+#| fig-width: 13
+#| fig-height: 8
+#| results: hide
+
+# densidade da Epanechnikov Generalizada
+depanec <- function(x, b) {
+  ifelse(-b < x & x < b, 3/(4*b^3) *(b^2 - x^2), 0)
+}
+
+# plot
+par(mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=2)
+curve(depanec(x, 2), -6, 6, ylab='y', lwd=2)
+curve(depanec(x, 3), -6, 6, add=T, col='blue', lwd=2)
+curve(depanec(x, 5), -6, 6, add=T, col='red', lwd=2)
+legend('topright', legend=c(expression(beta==2), expression(beta==3),
+                            expression(beta==5)),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+```
+</div>
+
+
+
+## Regra de Encolhimento
+Com isso, é possível estabelecer a distribuição a posteriori $\theta \mid d$ de cada coeficiente:
+
+\begin{align*}
+\pi(\theta \mid d) &\propto \pi(\theta) \LL(\theta; d)\\
+&\propto \left[\alpha \delta_0(\theta) + (1 - \alpha) g(\theta; \tau) \right]\exp\left\{\frac{-1}{2\sigma^2} (d - \theta)^2\right\}
+\end{align*}
+
+A regra de encolhimento é dada pela esperança da posteriori, calculando obtém-se que:
+$$
+\small
+\delta(d) = 
+\dfrac{
+  (1-\alpha) \frac{3 \sqrt{2\lambda}}{8 \beta^3}
+  \left[ \frac{2 \lambda\beta^2 + 3\beta\sqrt{2\lambda} + 3}{2\lambda^2}
+  \left( e^{-\sqrt{2\lambda}(\beta - d)} - e^{-\sqrt{2\lambda}(\beta+d)} \right)
+  + \frac{(\lambda\beta^2 - 3) d\sqrt{2\lambda} - d^3\lambda\sqrt{2\lambda}}{\lambda^2}
+  \right]
+}{
+  \alpha \frac{\sqrt{2l}}{2} e^{-\sqrt{(2l)}\lvert d \rvert}
+  \left(0, \frac{1}{\sqrt{2\lambda}} \right) +
+  (1 - \alpha) \frac{3\sqrt{2\lambda}}{8\beta^3} \left[\frac{\beta}{\lambda}
+  \left( e^{-\sqrt{2\lambda}(\beta + d)} + e^{-\sqrt{2\lambda}(\beta-d)} \right)
+ + \frac{2}{\sqrt{2\lambda}} \left(\beta^2 - d^2 - \frac{1}{\lambda}\right) \right]
+}
+$$
+<!-- $$ -->
+<!-- \delta(d) = \frac{(1-\alpha)\int_\RR (\sigma u + d) g(\sigma u + d; \tau) \phi(u) du}{\frac{\alpha}{\sigma}\phi\left(\frac{d}{\sigma}\right) + (1 + \alpha) \int_\RR g(\sigma u + d; \tau) \phi(u) du} -->
+<!-- $$ -->
+Por sorte, esta regra tem forma explicita, no geral, elas não são tratáveis analiticamente, sendo necessário utilizar métodos Monte Carlo para aproximá-la.
+
+::: {.notes}
+É raro a regra ser tratável analiticamente, normalmente, é necessário utilizar métodos Monte Carlo.
+
+Curiosidade, esta regra foi desenvolvida para altos níveis de razão sinal-ruído.
+:::
+
+
+
+## Regra de Encolhimento
+<div style='text-align:center'>
+```{r plot_regras_de_shrink_epanec}
+#| fig-cap: '**Figura 2**: Regra de encolhimento variando os parámetro $\alpha$, $\beta$ e $\lambda$, separadamente.'
+#| fig-width: 16
+#| fig-height: 7
+
+par(mfrow=c(1,3), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.7)
+curve(epanec_shrink(x, a=0.8, b=5, l=5), -4,4, lwd=2, ylab=expression(delta(d)), xlab='d',
+      main=expression(alpha == 0.8 ~ ',' ~ beta == 5))
+curve(epanec_shrink(x, a=0.8, b=5, l=15), -4,4, add=T, col='blue',lwd=2)
+curve(epanec_shrink(x, a=0.8, b=5, l=60), -4,4, add=T, col='red', lwd=2)
+legend('bottomright', legend=c(expression(lambda == 5), expression(lambda == 15),
+                               expression(lambda == 60)),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+curve(epanec_shrink(x, a=0.8, b=5, l=10), -4,4, lwd=2, ylab=expression(delta(d)), xlab='d',
+      main=expression(alpha == 0.8 ~ ',' ~ lambda == 10))
+curve(epanec_shrink(x, a=0.8, b=25, l=10), -4,4, add=T, col='blue',lwd=2)
+curve(epanec_shrink(x, a=0.8, b=100, l=10), -4,4, add=T, col='red', lwd=2)
+legend('bottomright', legend=c(expression(beta == 5), expression(beta == 25),
+                               expression(beta == 100)),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+
+curve(epanec_shrink(x, a=0.6, b=20, l=10), -4,4, lwd=2, ylab=expression(delta(d)),
+      xlab='d', main=expression(beta == 20 ~ ',' ~ lambda == 10))
+curve(epanec_shrink(x, a=0.9, b=20, l=10), -4,4, add=T, col='blue',lwd=2)
+curve(epanec_shrink(x, a=0.99, b=20, l=10), -4,4, add=T, col='red', lwd=2)
+legend('bottomright', legend=c(expression(alpha == 0.6), expression(alpha == 0.9),
+                               expression(alpha == 0.99)),
+       col=c('black', 'blue', 'red'), lwd=2, bty='n')
+```
+</div>
+
+```{r plot_regras_de_shrink_bayes, eval=F}
+#| fig-cap: '**Figura 2**: Regra de encolhimento variando o hiperparámetro $\tau$ para $\alpha = 0.7$ (a.) e $\alpha$ para $\tau = 5$ (b.).'
+#| fig-width: 16
+#| fig-height: 7
+#| results: hide
+
+# -------- Shrinkage da logistica -------- #
+# d - coeficientes empiricos
+# a - alpha
+# s - desvio padrão
+# t - parâmetro da logistica
+
+logis_shrink <- function(d, a, s, t) {
+  u <- rnorm(10000)
+  delta <- vector(mode='double', length=length(d))
+  
+  for (i in 1:length(d)) {
+    x <- s*u + d[i]
+    int1 <- mean(x * dlogis(x, scale=t))
+    int2 <- mean(dlogis(x, scale=t))
+    delta[i] <- (1-a) * int1/(a * dnorm(d[i], sd=s)/s + (1-a) * int2)
+  }
+  
+  return(delta)
+}
+
+
+# Definindo parâmetros
+x <- seq(-7, 7, 0.05)
+
+# config plot
+par(mfrow=c(1,2), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+
+# plot variando tau
+plot(x, main=expression('a. Variando ' ~ tau), type='n', xlab='', ylab='',
+     xlim=c(-6.5,6.5), ylim=c(-5,5))
+lines(x, logis_shrink(x, 0.7, 1, 5), col=1, lwd=2)
+lines(x, logis_shrink(x, 0.7, 1, 10), col=2, lwd=2)
+lines(x, logis_shrink(x, 0.7, 1, 30), col=4, lwd=2)
+legend('bottomright', bty='n', col=c(1,2,4), lwd=2, cex=1.2,
+       legend=c(expression(tau==5),expression(tau==10), expression(tau==30)))
+
+# plot variando alpha
+plot(x, main=expression('b. Variando ' ~ alpha), type='n', xlab='', ylab='',
+     xlim=c(-6.5,6.5), ylim=c(-5,5))
+lines(x, logis_shrink(x, 0.5, 1, 5), col=1, lwd=2)
+lines(x, logis_shrink(x, 0.7, 1, 5), col=2, lwd=2)
+lines(x, logis_shrink(x, 0.9, 1, 5), col=4, lwd=2)
+legend('bottomright', bty='n', col=c(1,2,4), lwd=2, cex=1.2,
+       legend=c(expression(alpha==0.5),expression(alpha==0.7), expression(alpha==0.9)))
+```
+
+
+
+
+# Aplicação
+
+## Contextualização
+A epilepsia é um distúrbio neurológico caracterizado pela ocorrência de convulsões, causadas por uma atividade neuronal excessiva ou sincronizada no cérebro.
+
+Essas crises podem resultar em problemas psiquiátricos, quedas, déficits cognitivos e aumento do risco de morte.
+
+Uma das estratégias mais promissoras é a detecção do estado pré-ictal, período que antecede uma crise.
+
+Identificá-lo pode permitir ações preventivas e reduzir os impactos negativos das convulsões.
+
+
+
+## Aplicação
+Este estudo utiliza dados do eletroencefalograma (EEG) do couro cabeludo de $14$ pacientes, registrados com eletrodos reutilizáveis de prata e ouro.
+
+Os [dados](https://physionet.org/content/siena-scalp-eeg/1.0.0/) foram retirados de Detti *et al*. (2020), da Unidade de Neurologia e Neurofisiologia da Universidade de Siena, Itália.
+
+O banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações (em minutos).
+
+Para este estudo, foi seleiconado o paciente $5$ com tamanho amostral correspondente a $n = 2^{15} = 32.768$ observações.
+
+
+
+## Aplicação
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Função observada (preto) e função recuperada (azul).'
+#| fig-width: 14
+#| fig-height: 7
+
+# db <- read.edf('data/PN05-4.edf')
+# readr::write_csv(
+#   data.frame(y=db$signal$EEG_Fp1$data, t=db$signal$EEG_Fp1$t)[1:2^15,],
+#   'data/recorte_dados.csv')
+
+# DWT
+db <- readr::read_csv('data/recorte_dados.csv')
+dwt <- wd(db$y, filter.number=5, family='DaubExPhase')
+
+# shrinkage bayesiano
+s <- mad(accessD(dwt, lev=nlevelsWT(dwt)-1))  # estimativa de sigma
+dwt_T <- dwt
+dwt_T$D <- epanec_shrink(dwt$D, a=0.9, b=max(abs(dwt$D)), l=0.005)
+
+# IDWT
+f_hat <- wr(dwt_T)
+
+# plot
+par(mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+plot(db$t, db$y, type='l', ylab='y', xlab='x')
+lines(db$t, f_hat, col='blue')
+legend('bottomleft', legend=c('Função Estimada', 'Função Observada'), bty='n',
+       col=c('blue','black'), lwd=2)
+```
+</div>
+
+::: {.notes}
+- Possível aplicação em detecção de pontos de mudança para determinar possível ataque epilético;
+- Fazer link com Análise de Dados Funcionais.
+:::
+
+
+
+# Simulação
+
+## Simulação
+Na simulação foram comparados os cenários:
+
+- $10.000$ replicações;
+- $n = 32$ e $128$ pontos;
+- $SNR = 3$ e $SNR = 7$;
+- Funções de teste: Bumps e SpaHet;
+- Métodos aplicados:
+  - Limiarização com política *SURE* para escolha de limiar;
+  - Proposta bayesiana com $\alpha = 0.8$, $\lambda_{n=32} \approx 0.34$ e $\lambda_{n=128} \approx 1.3$;
+  - Suaviazação por splines (método "concorrente").
+- Foram utilizadas as ondaletas de Daubechies com $5$ momentos nulos.
+
+::: {.notes}
+$\beta$ é utilizado como o maior coeficiente de ondaleta em módulo, para que a regra faça sentido, devido ao domínio da Epanechnikov.
+:::
+
+
+
+## Funções Usadas na Simulação
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Funções de teste utilizadas na simulação.'
+#| fig-width: 16
+#| fig-height: 7
+
+# plot
+par(mfrow=c(1,2), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+plot((1:2048)/2048, DJ.EX(n=2048)$bumps, type='l', ylab='y', xlab='x', main='Bumps')
+plot((1:2048)/2048, spahet(n=2048), type='l', ylab='y', xlab='x', main='SpaHet')
+```
+</div>
+
+::: {.notes}
+Ressaltar:
+
+- Bumps é "mal comportada" (muitos picos);
+- SpaHet é "bem comportada" (suave).
+:::
+
+
+
+## Splines
+Neste método, busca-se estimar uma função $g$, tal que
+$$
+\sum_{i=1}^n (y_i - g(x_i))^2 + \lambda\int g''(t) dt
+$$
+com $\lambda \leq 0$.
+
+A função $g$ que minimiza a condição é denominada de spline de suavização. Além disso, o parâmetro $\lambda$ controla a suavidade da função, onde:
+
+- $\lambda = 0$: gera uma $g$ interpoladora (não há penalização);
+- $\lambda \to \infty$: aumenta a suavização de $g$ até chegar em uma reta.
+
+
+::: {.notes}
+- Toda observação é um knot, trocando o problema de posicioná-los (spline) por determinar $\lambda$ (suavização por spline).
+- Gera uma função suave.
+- Lembra métodos como LASSSO e Ridge.
+:::
+
+
+
+## Resultados
+
+:::{.center-text}
+**Tabela 1**: Resultado da simulação com AMSE (SD).
+:::
+<center>![](figuras/simu_resultado.png){width=70%}</center>
+
+::: {.notes}
+- AMSE: Average Mean Squared Error.
+:::
+
+
+## Resultados
+<div style='text-align:center'>
+```{r}
+#| fig-cap: '**Figura 2**: Box Plot do MSE.'
+#| fig-width: 16
+#| fig-height: 8.7
+
+load('simulacao.RData')
+
+par(mfrow=c(2,2), mgp=c(1.5, 0.5, 0), mar=c(3.5, 3.5, 1.5, 1), cex=1.5)
+
+list(wave_bumps_32_3_b, wave_bumps_32_3_s, spline_bumps_32_3,
+     wave_bumps_32_7_s, wave_bumps_32_7_s, spline_bumps_32_7) |>
+  sapply(\(x) x$MSE) |> 
+  boxplot(main=expression('Bumps com' ~ n == 32), names=rep(c('Bayes', 'SURE', 'Splines'), 2),
+          main='', col=rep(c('green', 'blue'), each=3))
+legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
+       col=c('green', 'blue'), bty='n', pch=16, pt.cex=1.2)
+
+
+list(wave_bumps_128_3_b, wave_bumps_128_3_s, spline_bumps_128_3,
+     wave_bumps_128_7_s, wave_bumps_128_7_s, spline_bumps_128_7) |>
+  sapply(\(x) x$MSE) |> 
+  boxplot(main=expression('Bumps com' ~ n == 128), names=rep(c('Bayes', 'SURE', 'Splines'), 2),
+          main='', col=rep(c('green', 'blue'), each=3))
+legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
+       col=c('green', 'blue'), bty='n', pch=16, pt.cex=1.2)
+
+list(wave_spahet_32_3_b, wave_spahet_32_3_s, spline_spahet_32_3,
+     wave_spahet_32_7_s, wave_spahet_32_7_s, spline_spahet_32_7) |>
+  sapply(\(x) x$MSE) |> 
+  boxplot(main=expression('SpaHet com' ~ n == 32), names=rep(c('Bayes', 'SURE', 'Splines'), 2),
+          main='', col=rep(c('green', 'blue'), each=3))
+legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
+       col=c('green', 'blue'), bty='n', pch=16, pt.cex=1.2)
+
+list(wave_spahet_128_3_b, wave_spahet_128_3_s, spline_spahet_128_3,
+     wave_spahet_128_7_s, wave_spahet_128_7_s, spline_spahet_128_7) |>
+  sapply(\(x) x$MSE) |> 
+  boxplot(main=expression('SpaHet com' ~ n == 128), names=rep(c('Bayes', 'SURE', 'Splines'), 2),
+          main='', col=rep(c('green', 'blue'), each=3))
+legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
+       col=c('green', 'blue'), bty='n', pch=16, pt.cex=1.2)
+```
+</div>
+
+
+
+
+## Vantagens e Desvantagens das Ondaletas
+
+<br>
+
+**Vantages**:
+
+- Modela funções com discontinuidades, picos entre outras características de modelar;
+- Representação esparsa;
+- Grande flexibilidade, já que existem diversos tipos de ondaletas, para diversos problemas.
+
+<br>
+
+**Desvantagens**:
+
+- No geral, não apresentam forma fechada.
+- Maior dificuldade em interpretação, comparado à metodos tradicionais.
+
+
+
+# Muito Obrigado!
+<center>![](figuras/obrigado.gif){width=65%}</center>
+
+
+
+# Referências
+
+::: {style='font-size: 90%;'}
+- Nason, G.P. (2008). *Wavelet Methods in Statistics with R*. Springer.
+
+- Nason, G.P. (2024). *wavethresh: Wavelets Statistics and Transforms*. R package version 4.7.3, <https://CRAN.R-project.org/package=wavethresh>.
+
+- Sousa, A.R.S. (2018). *Encolhimento Bayesiano Sob Priori Beta de Coeficientes de Ondaletas em Modelos com Erros Gaussianos e Positivos*. Tese (doutorado) - UNICAMP, IMECC, Campinas, SP. DOI: [10.47749/T/UNICAMP.2018.1080773](https://doi.org/10.47749/T/UNICAMP.2018.1080773).
+
+- Sousa, A.R.S. (2020). Bayesian wavelet shrinkage with logistic prior. *Communications in Statistics - Simulation and Computation*. DOI: [10.1080/03610918.2020.1747076](https://doi.org/10.1080/03610918.2020.1747076).
+
+- Barrios, F.A.C. (2025). *Comparação de Desempenho de Estimadores de Coeficientes de Ondaletas em Dados com Baixa Razão Sinal-Ruído via Simulações Monte Carlo*. Tese (mestrado) - UNICAMP, IMECC, Campinas, SP.
+
+- Detti, P., Vatti, G., Lara, Z.M. (2020). EEG Synchronization Analysis for Seizure Prediction: A Study on Data of Noninvasive Recordings. *Processes*, 8(7), 846. DOI: [10.3390/pr8070846](https://doi.org/10.3390/pr8070846).
+
+- James, G., Witten, D., Hastie, T., Tibshirani, R. (2014). *An Introduction to Statistical Learning with Applications in R*. Segunda edição. Springer.
+:::

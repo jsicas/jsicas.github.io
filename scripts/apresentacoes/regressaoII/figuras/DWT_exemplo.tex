@@ -1,0 +1,51 @@
+\documentclass[tikz, border=0pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}    % Empilhamento de equações de forma numerada
+\usepackage{forest}     % Diagrama do tipo "floresta"
+\usepackage{tikz}    % Fazer figuras
+\usepackage{xcolor}
+\usepackage{pagecolor}
+\definecolor{page}{HTML}{fcfbf9}
+\pagecolor{page}
+
+\begin{document}
+	
+	\begin{forest}
+		for tree={inner sep=1pt,
+			grow'=north, s sep=15mm,
+			math content,
+			edge={densely dashed, <-},
+			if n children=1{for children={no edge}}{},
+			if level<=1{no edge}{if n children=2{for children={tikz={\draw[->]()--(!uu);}}}{}}
+		}
+		[
+		[\frac{21\sqrt{2}}{2}
+		[\frac{3\sqrt{2}}{2}
+		[9
+		[7
+		[\sqrt{2}
+		[0[1][1]]
+		]
+		[8\sqrt{2}
+		[\sqrt{2}[7][9]]
+		]
+		]
+		]
+		[12
+		[2
+		[5\sqrt{2}
+		[3\sqrt{2}[2][8]]
+		]
+		[7\sqrt{2}
+		[\text{-}\sqrt{2}[8][6]]
+		]
+		]
+		]
+		]
+		]
+		[\boldsymbol{c}_0[\boldsymbol{d}_0[\boldsymbol{c}_1[\boldsymbol{d}_1[\boldsymbol{c}_2[\boldsymbol{d}_2[\boldsymbol{y}]]]]]]]
+		]
+	\end{forest}
+	
+\end{document}
