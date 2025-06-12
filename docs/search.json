@@ -417,7 +417,7 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#ondaleta-4",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Ondaleta",
-    "text": "Ondaleta\n\n\n\n\n\nFigura 2: Funções ondaleta de Daubechies \\(\\psi\\) e escala \\(\\phi\\) para 1 (Haar), 2, 5 e 8 momentos nulos.\n\n\n\n\n\n\n\n\nApenas as ondaletas de Haar tem forma fechada;\nQuanto mais momentos nulos, mais ela oscila."
+    "text": "Ondaleta\n\n\n\n\n\nFigura 1: Funções ondaleta de Daubechies \\(\\psi\\) e escala \\(\\phi\\) para 1 (Haar), 2, 5 e 8 momentos nulos.\n\n\n\n\n\n\n\n\nApenas as ondaletas de Haar tem forma fechada;\nQuanto mais momentos nulos, mais ela oscila."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-1",
@@ -438,14 +438,14 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-3",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Exemplo 1: DWT",
-    "text": "Exemplo 1: DWT\nConsiderando o vetor de dados \\(\\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'\\), a Figura 1 apresenta graficamente a DWT.\n\nFigura 1: Exemplo visual da DWT (Nason, 2008)."
+    "text": "Exemplo 1: DWT\nConsiderando o vetor de dados \\(\\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'\\), a Figura 1 apresenta graficamente a DWT.\n\nFigura 2: Exemplo visual da DWT (Nason, 2008)."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-4",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-4",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Exemplo 1: DWT",
-    "text": "Exemplo 1: DWT\n\n\n\n\n\nFigura 2: Decomposição dos coeficientes de ondaletas. por nível de resolução."
+    "text": "Exemplo 1: DWT\n\n\n\n\n\nFigura 3: Decomposição dos coeficientes de ondaletas. por nível de resolução."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#exemplo-1-dwt-5",
@@ -473,7 +473,7 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-3",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Modelo",
-    "text": "Modelo\n\nRegra do limiar duro: \\[\n\\delta^H(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  d &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 1: Regra do limiar duro.\n\n\n\n\n\nRegra do limiar suave: \\[\n\\delta^S(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  \\operatorname{sgn}(d) (\\lvert d \\rvert - \\lambda) &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 1: Regra do limiar suave."
+    "text": "Modelo\n\nRegra do limiar duro: \\[\n\\delta^H(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  d &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 4: Regra do limiar duro.\n\n\n\n\n\nRegra do limiar suave: \\[\n\\delta^S(d) =\n\\begin{cases}\n  0 &, \\text{ se } \\lvert d \\rvert \\leq \\lambda\\\\\n  \\operatorname{sgn}(d) (\\lvert d \\rvert - \\lambda) &, \\text{ se } \\lvert d \\rvert &gt; \\lambda\n\\end{cases}\n\\]\n\nFigura 5: Regra do limiar suave."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#modelo-4",
@@ -487,42 +487,42 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#recapitulando",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Recapitulando",
-    "text": "Recapitulando\n  \n\nFigura 1: Resumo do procedimento de estimação."
+    "text": "Recapitulando\n  \n\nFigura 6: Resumo do procedimento de estimação."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-de-teste",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-de-teste",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Funções de Teste",
-    "text": "Funções de Teste\n\n\n\n\n\nFigura 2: Funções de teste de Donoho e Johnstone."
+    "text": "Funções de Teste\n\n\n\n\n\nFigura 7: Funções de teste de Donoho e Johnstone."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#razão-sinal-ruído-snr",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#razão-sinal-ruído-snr",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Razão Sinal-Ruído (SNR)",
-    "text": "Razão Sinal-Ruído (SNR)\nA razão sinal-ruído (SNR) é dada por:\n\\[\nSNR = \\frac{\\operatorname{SD}(\\text{sinal})}{\\operatorname{SD}(\\text{ruído})} = \\frac{\\operatorname{SD}(f)}{\\operatorname{SD}(\\varepsilon)}\n\\] Para estudos simulacionais, é interessante fixar a razão sinal-ruído para determinar o desepenho da téninca para aquela \\(SNR\\) e permitir a comparação com outros métodos.\n\n\n\n\n\nFigura 2: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada."
+    "text": "Razão Sinal-Ruído (SNR)\nA razão sinal-ruído (SNR) é dada por:\n\\[\nSNR = \\frac{\\operatorname{SD}(\\text{sinal})}{\\operatorname{SD}(\\text{ruído})} = \\frac{\\operatorname{SD}(f)}{\\operatorname{SD}(\\varepsilon)}\n\\] Para estudos simulacionais, é interessante fixar a razão sinal-ruído para determinar o desepenho da téninca para aquela \\(SNR\\) e permitir a comparação com outros métodos.\n\n\n\n\n\nFigura 8: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#gerando-amostra",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#gerando-amostra",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Gerando Amostra",
-    "text": "Gerando Amostra\n\n\n\n\n\nFigura 2: Amostra gerada com \\(SNR = 3\\). Azul representa a função verdadeira e preto a amostra."
+    "text": "Gerando Amostra\n\n\n\n\n\nFigura 9: Amostra gerada com \\(SNR = 3\\). Azul representa a função verdadeira e preto a amostra."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#coeficientes-de-ondaletas",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#coeficientes-de-ondaletas",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Coeficientes de Ondaletas",
-    "text": "Coeficientes de Ondaletas\n\n\n\n\n\nFigura 2: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.\n\n\n\n\n\n\n\nA quantidade de coeficientes nulos foi de 890."
+    "text": "Coeficientes de Ondaletas\n\n\n\n\n\nFigura 10: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.\n\n\n\n\n\n\n\nA quantidade de coeficientes nulos foi de 890."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#estimativa-da-bumps",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#estimativa-da-bumps",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Estimativa da Bumps",
-    "text": "Estimativa da Bumps\n\n\n\n\n\nFigura 2: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.\n\n\n\n\n\n\n\nRessaltar que a recuperação foi relativamente boa considerando \\(SNR=3\\), o qual já é considerado um caso com muito ruído."
+    "text": "Estimativa da Bumps\n\n\n\n\n\nFigura 11: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.\n\n\n\n\n\n\n\nRessaltar que a recuperação foi relativamente boa considerando \\(SNR=3\\), o qual já é considerado um caso com muito ruído."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#priore-spike-and-slab-1",
@@ -536,7 +536,7 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Regra de Encolhimento",
-    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 2: Densidade da Epanechnikov Generalizada para \\(\\beta = 2\\), \\(3\\) e \\(5\\)."
+    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 12: Densidade da Epanechnikov Generalizada para \\(\\beta = 2\\), \\(3\\) e \\(5\\)."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-1",
@@ -550,28 +550,28 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#regra-de-encolhimento-2",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Regra de Encolhimento",
-    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 2: Regra de encolhimento variando os parámetro \\(\\alpha\\), \\(\\beta\\) e \\(\\lambda\\), separadamente."
+    "text": "Regra de Encolhimento\n\n\n\n\n\nFigura 13: Regra de encolhimento variando os parámetro \\(\\alpha\\), \\(\\beta\\) e \\(\\lambda\\), separadamente."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#contextualização",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#contextualização",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Contextualização",
-    "text": "Contextualização\nA epilepsia é um distúrbio neurológico caracterizado pela ocorrência de convulsões, causadas por uma atividade neuronal excessiva ou sincronizada no cérebro.\nEssas crises podem resultar em problemas psiquiátricos, quedas, déficits cognitivos e aumento do risco de morte.\nUma das estratégias mais promissoras é a detecção do estado pré-ictal, período que antecede uma crise.\nIdentificá-lo pode permitir ações preventivas e reduzir os impactos negativos das convulsões."
+    "text": "Contextualização\nA epilepsia é um distúrbio neurológico caracterizado pela ocorrência de convulsões, causadas por uma atividade neuronal excessiva ou sincronizada no cérebro.\n\nEssas crises podem resultar em problemas psiquiátricos, quedas, déficits cognitivos e aumento do risco de morte.\n\nUma das estratégias mais promissoras é a detecção do estado pré-ictal, período que antecede uma crise.\n\nIdentificá-lo pode permitir ações preventivas e reduzir os impactos negativos das convulsões."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-1",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-1",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Aplicação",
-    "text": "Aplicação\nEste estudo utiliza dados do eletroencefalograma (EEG) do couro cabeludo de \\(14\\) pacientes, registrados com eletrodos reutilizáveis de prata e ouro.\nOs dados foram retirados de Detti et al. (2020), da Unidade de Neurologia e Neurofisiologia da Universidade de Siena, Itália.\nO banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações (em minutos).\nPara este estudo, foi seleiconado o paciente \\(5\\) com tamanho amostral correspondente a \\(n = 2^{15} = 32.768\\) observações."
+    "text": "Aplicação\nEste estudo utiliza dados do eletroencefalograma (EEG) do couro cabeludo de \\(14\\) pacientes, registrados com eletrodos reutilizáveis de prata e ouro.\n\nOs dados foram retirados de Detti et al. (2020), da Unidade de Neurologia e Neurofisiologia da Universidade de Siena, Itália.\n\nO banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações.\n\nPara este estudo, foi seleiconado o paciente \\(5\\) com tamanho amostral correspondente a \\(n = 2^{15} = 32.768\\) observações.\n\n\nTeve que ser feito um corte nos dados para o vetor ficar diádico."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-2",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#aplicação-2",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Aplicação",
-    "text": "Aplicação\n\n\n\n\n\nFigura 2: Função observada (preto) e função recuperada (azul).\n\n\n\n\n\n\n\n\nPossível aplicação em detecção de pontos de mudança para determinar possível ataque epilético;\nFazer link com Análise de Dados Funcionais."
+    "text": "Aplicação\n\n\n\n\n\nFigura 15: Função observada (preto) e função recuperada (azul).\n\n\n\n\n\n\n\n\nPossível aplicação em detecção de pontos de mudança para determinar possível ataque epilético;\nFazer link com Análise de Dados Funcionais."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#simulação-1",
@@ -585,14 +585,14 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#funções-usadas-na-simulação",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Funções Usadas na Simulação",
-    "text": "Funções Usadas na Simulação\n\n\n\n\n\nFigura 2: Funções de teste utilizadas na simulação.\n\n\n\n\n\n\n\nRessaltar:\n\nBumps é “mal comportada” (muitos picos);\nSpaHet é “bem comportada” (suave)."
+    "text": "Funções Usadas na Simulação\n\n\n\n\n\nFigura 16: Funções de teste utilizadas na simulação.\n\n\n\n\n\n\n\nRessaltar:\n\nBumps é “mal comportada” (muitos picos);\nSpaHet é “bem comportada” (suave)."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#splines",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#splines",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Splines",
-    "text": "Splines\nNeste método, busca-se estimar uma função \\(g\\), tal que \\[\n\\sum_{i=1}^n (y_i - g(x_i))^2 + \\lambda\\int g''(t) dt\n\\] com \\(\\lambda \\leq 0\\).\nA função \\(g\\) que minimiza a condição é denominada de spline de suavização. Além disso, o parâmetro \\(\\lambda\\) controla a suavidade da função, onde:\n\n\\(\\lambda = 0\\): gera uma \\(g\\) interpoladora (não há penalização);\n\\(\\lambda \\to \\infty\\): aumenta a suavização de \\(g\\) até chegar em uma reta.\n\n\n\nToda observação é um knot, trocando o problema de posicioná-los (spline) por determinar \\(\\lambda\\) (suavização por spline).\nGera uma função suave.\nLembra métodos como LASSSO e Ridge."
+    "text": "Splines\nNeste método, busca-se estimar uma função \\(g\\), tal que: \\[\n\\sum_{i=1}^n (y_i - g(x_i))^2 + \\lambda\\int g''(t) dt\n\\] com \\(\\lambda \\leq 0\\).\nA função \\(g\\) que minimiza a condição é denominada de spline de suavização. Além disso, o parâmetro \\(\\lambda\\) controla a suavidade da função, onde:\n\n\\(\\lambda = 0\\): gera uma \\(g\\) interpoladora (não há penalização);\n\\(\\lambda \\to \\infty\\): aumenta a suavização de \\(g\\) até chegar em uma reta.\n\n\n\nToda observação é um knot, trocando o problema de posicioná-los (spline) por determinar \\(\\lambda\\) (suavização por spline).\nGera uma função suave.\nLembra métodos como LASSSO e Ridge."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados",
@@ -606,13 +606,13 @@
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#resultados-1",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Resultados",
-    "text": "Resultados\n\n\n\n\n\nFigura 2: Box Plot do MSE."
+    "text": "Resultados\n\n\n\n\n\nFigura 17: Box Plot do MSE."
   },
   {
     "objectID": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#vantagens-e-desvantagens-das-ondaletas",
     "href": "scripts/apresentacoes/regressaoII/ME861_Apresentacao.html#vantagens-e-desvantagens-das-ondaletas",
     "title": "Regressão Não Paramétrica Através de Ondaletas",
     "section": "Vantagens e Desvantagens das Ondaletas",
-    "text": "Vantagens e Desvantagens das Ondaletas\n\nVantages:\n\nModela funções com discontinuidades, picos entre outras características de modelar;\nRepresentação esparsa;\nGrande flexibilidade, já que existem diversos tipos de ondaletas, para diversos problemas.\n\n\nDesvantagens:\n\nNo geral, não apresentam forma fechada.\nMaior dificuldade em interpretação, comparado à metodos tradicionais."
+    "text": "Vantagens e Desvantagens das Ondaletas\n\nVantages:\n\nModela funções com discontinuidades, picos entre outras características;\nRepresentação esparsa;\nGrande flexibilidade, já que existem diversos tipos de ondaletas, para diversos problemas.\n\n\nDesvantagens:\n\nNo geral, não apresentam forma fechada.\nMaior dificuldade em interpretação, comparado à metodos tradicionais.\n\n\n\nNo geral, outros métodos tem dificuldade em modelar características de discontinuidade e afins."
   }
 ]

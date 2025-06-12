@@ -200,7 +200,7 @@ Ademais, pela ortogonalidade de $W$, temos que $\|\bs d\|^2_2 = \|\bs y\|^2_2$ (
 ## Ondaleta
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Funções ondaleta de Daubechies $\psi$ e escala $\phi$ para 1 (Haar), 2, 5 e 8 momentos nulos.'
+#| fig-cap: '**Figura 1**: Funções ondaleta de Daubechies $\psi$ e escala $\phi$ para 1 (Haar), 2, 5 e 8 momentos nulos.'
 #| fig-width: 24
 #| fig-height: 12
 
@@ -281,7 +281,7 @@ $$
 Considerando o vetor de dados $\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'$, a Figura 1 apresenta graficamente a DWT.
 
 :::{.center-text}
-**Figura 1**: Exemplo visual da DWT (Nason, 2008).
+**Figura 2**: Exemplo visual da DWT (Nason, 2008).
 :::
 <center>![](figuras/DWT_exemplo.png){width=85%}</center>
 
@@ -291,7 +291,7 @@ Considerando o vetor de dados $\bs y = (1, 1, 7, 9, 2, 8, 8, 6)'$, a Figura 1 ap
 
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Decomposição dos coeficientes de ondaletas. por nível de resolução.'
+#| fig-cap: '**Figura 3**: Decomposição dos coeficientes de ondaletas. por nível de resolução.'
 #| fig-width: 10
 #| fig-height: 7
 #| results: hide
@@ -376,7 +376,7 @@ $$
 $$
 
 :::{.center-text}
-**Figura 1**: Regra do limiar duro.
+**Figura 4**: Regra do limiar duro.
 :::
 <center>![](figuras/hard_thresh.png){width=55%}</center>
 
@@ -393,7 +393,7 @@ $$
 $$
 
 :::{.center-text}
-**Figura 1**: Regra do limiar suave.
+**Figura 5**: Regra do limiar suave.
 :::
 <center>![](figuras/soft_thresh.png){width=55%}</center>
 
@@ -424,7 +424,7 @@ $$
 <br>
 
 :::{.center-text}
-**Figura 1**: Resumo do procedimento de estimação.
+**Figura 6**: Resumo do procedimento de estimação.
 :::
 
 <center>![](figuras/diagrama_resumo.png){width=65%}</center>
@@ -436,7 +436,7 @@ $$
 ## Funções de Teste
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Funções de teste de Donoho e Johnstone.'
+#| fig-cap: '**Figura 7**: Funções de teste de Donoho e Johnstone.'
 #| fig-width: 15
 #| fig-height: 7.5
 
@@ -461,7 +461,7 @@ Para estudos simulacionais, é interessante fixar a razão sinal-ruído para det
 
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada.'
+#| fig-cap: '**Figura 8**: Comparação entre diferentes SNR. Azul representa a função verdadeira e preto a amostra gerada.'
 #| fig-width: 17
 #| fig-height: 4.7
 
@@ -496,7 +496,7 @@ lines(x, bumps, col='blue')
 ## Gerando Amostra
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Amostra gerada com $SNR = 3$. Azul representa a função verdadeira e preto a amostra.'
+#| fig-cap: '**Figura 9**: Amostra gerada com $SNR = 3$. Azul representa a função verdadeira e preto a amostra.'
 #| fig-width: 16
 #| fig-height: 6
 #| results: hide
@@ -523,7 +523,7 @@ lines(x, bumps, col='blue')
 ## Coeficientes de Ondaletas
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.'
+#| fig-cap: '**Figura 10**: Coeficientes de ondaletas empíricos (a.) e estimados (b.) por nível de resolução.'
 #| fig-width: 13
 #| fig-height: 8.25
 #| results: hide
@@ -554,7 +554,7 @@ A quantidade de coeficientes nulos foi de `r sum(dwt_t$D == 0)`.
 ## Estimativa da Bumps
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.'
+#| fig-cap: '**Figura 11**: Estimativa da bumps utilizando ondaleta de Daubechies com 2 momentos nulos e política de validação cruzada. Azul representa a função verdadeira e preto a função estimada.'
 #| fig-width: 13
 #| fig-height: 8
 
@@ -610,7 +610,7 @@ Propostas Bayesianas apenas encolhem, mas não zeram os coeficientes.
 ## Regra de Encolhimento
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Densidade da Epanechnikov Generalizada para $\beta = 2$, $3$ e $5$.'
+#| fig-cap: '**Figura 12**: Densidade da Epanechnikov Generalizada para $\beta = 2$, $3$ e $5$.'
 #| fig-width: 13
 #| fig-height: 8
 #| results: hide
@@ -675,7 +675,7 @@ Curiosidade, esta regra foi desenvolvida para altos níveis de razão sinal-ruí
 ## Regra de Encolhimento
 <div style='text-align:center'>
 ```{r plot_regras_de_shrink_epanec}
-#| fig-cap: '**Figura 2**: Regra de encolhimento variando os parámetro $\alpha$, $\beta$ e $\lambda$, separadamente.'
+#| fig-cap: '**Figura 13**: Regra de encolhimento variando os parámetro $\alpha$, $\beta$ e $\lambda$, separadamente.'
 #| fig-width: 16
 #| fig-height: 7
 
@@ -707,7 +707,7 @@ legend('bottomright', legend=c(expression(alpha == 0.6), expression(alpha == 0.9
 </div>
 
 ```{r plot_regras_de_shrink_bayes, eval=F}
-#| fig-cap: '**Figura 2**: Regra de encolhimento variando o hiperparámetro $\tau$ para $\alpha = 0.7$ (a.) e $\alpha$ para $\tau = 5$ (b.).'
+#| fig-cap: '**Figura 14**: Regra de encolhimento variando o hiperparámetro $\tau$ para $\alpha = 0.7$ (a.) e $\alpha$ para $\tau = 5$ (b.).'
 #| fig-width: 16
 #| fig-height: 7
 #| results: hide
@@ -766,9 +766,15 @@ legend('bottomright', bty='n', col=c(1,2,4), lwd=2, cex=1.2,
 ## Contextualização
 A epilepsia é um distúrbio neurológico caracterizado pela ocorrência de convulsões, causadas por uma atividade neuronal excessiva ou sincronizada no cérebro.
 
+<br>
+
 Essas crises podem resultar em problemas psiquiátricos, quedas, déficits cognitivos e aumento do risco de morte.
 
+<br>
+
 Uma das estratégias mais promissoras é a detecção do estado pré-ictal, período que antecede uma crise.
+
+<br>
 
 Identificá-lo pode permitir ações preventivas e reduzir os impactos negativos das convulsões.
 
@@ -777,18 +783,28 @@ Identificá-lo pode permitir ações preventivas e reduzir os impactos negativos
 ## Aplicação
 Este estudo utiliza dados do eletroencefalograma (EEG) do couro cabeludo de $14$ pacientes, registrados com eletrodos reutilizáveis de prata e ouro.
 
+<br>
+
 Os [dados](https://physionet.org/content/siena-scalp-eeg/1.0.0/) foram retirados de Detti *et al*. (2020), da Unidade de Neurologia e Neurofisiologia da Universidade de Siena, Itália.
 
-O banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações (em minutos).
+<br>
+
+O banco apresenta variáveis como gênero, idade, número de canais de EEG, quantidade de crises e o tempo das gravações.
+
+<br>
 
 Para este estudo, foi seleiconado o paciente $5$ com tamanho amostral correspondente a $n = 2^{15} = 32.768$ observações.
+
+::: {.notes}
+- Teve que ser feito um corte nos dados para o vetor ficar diádico.
+:::
 
 
 
 ## Aplicação
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Função observada (preto) e função recuperada (azul).'
+#| fig-cap: '**Figura 15**: Função observada (preto) e função recuperada (azul).'
 #| fig-width: 14
 #| fig-height: 7
 
@@ -849,7 +865,7 @@ $\beta$ é utilizado como o maior coeficiente de ondaleta em módulo, para que a
 ## Funções Usadas na Simulação
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Funções de teste utilizadas na simulação.'
+#| fig-cap: '**Figura 16**: Funções de teste utilizadas na simulação.'
 #| fig-width: 16
 #| fig-height: 7
 
@@ -870,7 +886,7 @@ Ressaltar:
 
 
 ## Splines
-Neste método, busca-se estimar uma função $g$, tal que
+Neste método, busca-se estimar uma função $g$, tal que:
 $$
 \sum_{i=1}^n (y_i - g(x_i))^2 + \lambda\int g''(t) dt
 $$
@@ -905,9 +921,9 @@ A função $g$ que minimiza a condição é denominada de spline de suavização
 ## Resultados
 <div style='text-align:center'>
 ```{r}
-#| fig-cap: '**Figura 2**: Box Plot do MSE.'
+#| fig-cap: '**Figura 17**: Box Plot do MSE.'
 #| fig-width: 16
-#| fig-height: 8.7
+#| fig-height: 9
 
 load('simulacao.RData')
 
@@ -950,14 +966,13 @@ legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
 
 
 
-
 ## Vantagens e Desvantagens das Ondaletas
 
 <br>
 
 **Vantages**:
 
-- Modela funções com discontinuidades, picos entre outras características de modelar;
+- Modela funções com discontinuidades, picos entre outras características;
 - Representação esparsa;
 - Grande flexibilidade, já que existem diversos tipos de ondaletas, para diversos problemas.
 
@@ -967,6 +982,11 @@ legend('right', legend=c(expression(SNR == 3), expression(SNR == 7)),
 
 - No geral, não apresentam forma fechada.
 - Maior dificuldade em interpretação, comparado à metodos tradicionais.
+
+
+::: {.notes}
+- No geral, outros métodos tem dificuldade em modelar características de discontinuidade e afins.
+:::
 
 
 
